@@ -1,5 +1,0 @@
-name = Packaging
-description = Algorithms for breaking orders into packages for shipment.
-dependencies[] = uc_quote
-package = Ubercart - fulfillment
-core = 7.x
