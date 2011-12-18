@@ -1,0 +1,21 @@
+name = Packaging
+description = Algorithms for breaking orders into packages for shipment.
+dependencies[] = ctools
+package = Ubercart - fulfillment
+core = 7.x
+
+; Classes
+files[] = classes/package.inc
+files[] = classes/product.inc
+files[] = classes/strategy.inc
+
+; Packaging strategies
+files[] = strategies/package_all_in_one.strategy.inc
+files[] = strategies/package_each_in_own.strategy.inc
+files[] = strategies/package_one_package.strategy.inc
+files[] = strategies/package_by_volume.strategy.inc
+
+; Test cases
+files[] = tests/packaging.test
+
+configure = admin/settings/packaging
