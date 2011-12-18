@@ -1,0 +1,4 @@
+name = Packaging module hook and plugin tests
+description = Support module for Packaging tests
+core = 7.x
+hidden = TRUE

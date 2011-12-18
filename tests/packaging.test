@@ -1,0 +1,259 @@
+<?php
+
+/**
+ * @file
+ * Packaging Unit tests.
+ */
+
+/**
+ * SimpleTests for Packaging.
+ */
+class PackagingUnitTestCase extends DrupalUnitTestCase {
+
+  protected $products = array();
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Packaging',
+      'description' => 'Test Packaging.',
+      'group' => 'Packaging',
+    );
+  }
+
+  /**
+   * Overrides DrupalUnitTestCase::setUp().
+   */
+  function setUp() {
+    parent::setUp();
+
+    // Load all files needed for these Unit tests.
+    $this->loadIncludes();
+
+    // Create test products for packaging.
+    $this->products = $this->createTestProducts();
+    debug($this->products);
+  }
+
+  /**
+   * Test "All-in-one" packaging, where all products are put into one package
+   * subject only to package maximum weight.  If maximum weight is exceeded,
+   * a new package is created.
+   */
+  function testPackageAllInOne() {
+
+    $strategy = new PackageAllInOne();
+    $strategy->setMaximumPackageWeight(15);
+    $strategy->setDefaultWeightUnits('LB');
+    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+
+    $packages = $strategy->strategy($this->products);
+
+    debug($packages);
+
+    // Test different origin addresses
+    // Test different destination addresses
+
+    // Test effect of maximum package weight
+
+    // Test effect of package quantity
+  }
+
+  /**
+   * Test Each in Own packaging.
+   */
+  function testPackageEachInOwn() {
+
+    $strategy = new PackageEachInOwn();
+    $strategy->setMaximumPackageWeight(15);
+    $strategy->setDefaultWeightUnits('LB');
+    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+
+    $packages = $strategy->strategy($this->products);
+
+    debug($packages);
+
+    // Actual number of boxes.
+    $actual_number_of_packages = count($packages);
+
+    // Calculate expected number of boxes.
+    $expected_number_of_packages = 0;
+    foreach ($this->products as $product) {
+      $expected_number_of_packages += ceil($product->getQuantity() / $product->getPackageQuantity());
+    }
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages == $expected_number_of_packages),
+      t('Number of packages equals expectation.')
+    );
+  }
+
+  /**
+   * Test One package strategy.
+   */
+  function testPackageOnePackage() {
+
+    $strategy = new PackageOnePackage();
+    $strategy->setMaximumPackageWeight(15);
+    $strategy->setDefaultWeightUnits('LB');
+    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+
+    $packages = $strategy->strategy($this->products);
+
+    debug($packages);
+    // Actual number of boxes
+    $actual_number_of_packages = count($packages);
+
+    // Calculate expected number of boxes
+    $expected_number_of_packages = 1;
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages == $expected_number_of_packages),
+      t('Number of packages equals expectation.')
+    );
+  }
+
+  /**
+   * Test package by volume strategy.
+   */
+  function testPackageByVolume() {
+
+    $strategy = new PackageByVolume();
+    $strategy->setMaximumPackageWeight(15);
+    $strategy->setDefaultWeightUnits('LB');
+    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+
+    $packages = $strategy->strategy($this->products);
+
+    debug($packages);
+  }
+
+  /**
+   * Test custom strategy.
+   */
+  function testCustomStrategy() {
+    // Test plugin system to see that any custom plugin gets picked up.
+  }
+
+
+  /****************************************************************************
+   * Utility Functions                                                        *
+   ****************************************************************************/
+
+
+  /**
+   * Loads needed include files.
+   */
+  function loadIncludes() {
+    drupal_load('module', 'packaging');
+    module_load_include('inc', 'packaging', 'classes/packaging');
+    module_load_include('inc', 'packaging', 'classes/product');
+    module_load_include('inc', 'packaging', 'classes/strategy');
+    module_load_include('inc', 'packaging', 'strategies/package_each_in_own.strategy');
+    module_load_include('inc', 'packaging', 'strategies/package_all_in_one.strategy');
+    module_load_include('inc', 'packaging', 'strategies/package_one_package.strategy');
+    module_load_include('inc', 'packaging', 'strategies/package_by_volume.strategy');
+  }
+
+  /**
+   * Creates a new product.
+   */
+  function createTestProducts() {
+    $products = array();
+    $number = mt_rand(5, 10);
+    for ($i = 0; $i < $number; $i++) {
+      $products[] = Product::constructFromUbercartProduct($this->createProduct());
+    }
+    return $products;
+  }
+
+  /**
+   * Creates a new product.
+   */
+  function createProduct($product = array()) {
+    // Set the default required fields.
+    $weight_units = array('lb', 'kg', 'oz', 'g');
+    $length_units = array('in', 'ft', 'cm', 'mm');
+    $product += array(
+      'type' => 'product',
+      'model' => $this->randomName(8),
+      'list_price' => mt_rand(1, 9999),
+      'cost' => mt_rand(1, 9999),
+      'sell_price' => mt_rand(1, 9999),
+      'weight' => mt_rand(1, 5),
+      'weight_units' => array_rand(array_flip($weight_units)),
+      'length' => mt_rand(1, 9999),
+      'width' => mt_rand(1, 9999),
+      'height' => mt_rand(1, 9999),
+      'length_units' => array_rand(array_flip($length_units)),
+      'pkg_qty' => mt_rand(1, 10),
+      'default_qty' => 1,
+      'qty' => mt_rand(1,5),
+      'ordering' => mt_rand(-25, 25),
+      'shippable' => TRUE,
+    );
+
+    return (object) $product;
+  }
+
+  /**
+   * Creates a product with all attribute types and options.
+   *
+   * @param $product_class
+   *   Defaults to FALSE to create a normal product, set to TRUE to
+   *   create a product class instead.
+   */
+  public function createPackagingProducts($product_class = FALSE) {
+
+    // Create a product
+    if ($product_class) {
+      $product = $this->createProductClass();
+    }
+    else {
+      $product = $this->createProduct();
+    }
+
+    // Create some attributes
+    for ($i = 0; $i < 5; $i++) {
+      $attribute = UbercartAttributeTestCase::createAttribute();
+      $attributes[$attribute->aid] = $attribute;
+    }
+
+    // Add some options, organizing them by aid and oid.
+    $attribute_aids = array_keys($attributes);
+
+    $all_options = array();
+    foreach ($attribute_aids as $aid) {
+      for ($i = 0; $i < 3; $i++) {
+        $option = UbercartAttributeTestCase::createAttributeOption(array('aid' => $aid));
+        $all_options[$option->aid][$option->oid] = $option;
+      }
+    }
+
+   // array('required' => TRUE)
+
+    // Get the options.
+    $attribute = uc_attribute_load($attribute->aid);
+
+    // Load every attribute we got.
+    $attributes_with_options = uc_attribute_load_multiple();
+
+    // Pick 5 keys to check at random.
+    $aids = drupal_map_assoc(array_rand($attributes, 3));
+
+    // Load the attributes back.
+    $loaded_attributes = uc_attribute_load_multiple($aids);
+
+      // add attributes of all 4 types
+      // create both required and not required attributes
+
+    // Add the selected attributes to the product.
+    foreach ($loaded_attributes as $loaded_attribute) {
+      uc_attribute_subject_save($loaded_attribute, 'product', $product->nid, TRUE);
+    }
+
+    return $product;
+  }
+
+}
