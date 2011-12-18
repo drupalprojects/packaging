@@ -26,9 +26,9 @@
 class PackageEachInOwn extends PackagingStrategy {
 
   /**
-   * Implements Strategy::strategy().
+   * Implements Strategy::packageProducts().
    */
-  public function strategy($products) {
+  public function packageProducts($products) {
     // Each product line item in its own package, subject only to pkg_qty.
 
     // Loop over products.

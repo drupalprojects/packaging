@@ -30,9 +30,9 @@
 class PackageAllInOne extends PackagingStrategy {
 
   /**
-   * Implements Strategy::strategy().
+   * Implements Strategy::packageProducts().
    */
-  public function strategy($products) {
+  public function packageProducts($products) {
 
     // Create first package.
     $package = new Package();

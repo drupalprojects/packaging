@@ -2,31 +2,18 @@
 
 /**
  * @file
- * Class and interface definitions for packaging strategies.
+ * Class definition for packaging strategies.
  */
 
 
 /**
- * Interface to define a strategy.
+ * Abstract class for packaging strategies.
+ *
+ * Declares a packageProducts() function which much be implemented by
+ * subclasses wishing to provide their own packaging strategy. Defines
+ * some utility routines.
  */
-interface Strategy {
-
-  /**
-   * @param $products
-   *   An array of nodes of type Product.
-   *
-   * @return
-   *   An array of Package objects, each containing one or more of the products.
-   */
-  public function strategy($products);
-}
-
-
-/**
- * Abstract class for packaging strategies. Implements the Strategy interface
- * and defines some useful utility routines.
- */
-abstract class PackagingStrategy implements Strategy {
+abstract class PackagingStrategy {
 
   /** Constant used in internal implementation to indicate unlimited weight */
   const UNLIMITED_PACKAGE_WEIGHT = -1;
@@ -35,6 +22,19 @@ abstract class PackagingStrategy implements Strategy {
   protected $weight_units = 'LB';
   protected $weight_markup_function = 'packaging_weight_markup';
 
+
+  /**
+   * Abstract function for packaging strategies.
+   *
+   * Subclasses must implement this function to provide a strategy.
+   *
+   * @param $products
+   *   An array of nodes of type Product.
+   *
+   * @return
+   *   An array of Package objects, each containing one or more of the products.
+   */
+  abstract public function packageProducts($products);
 
   /**
    *

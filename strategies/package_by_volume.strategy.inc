@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Packaging strategy. Packages all products in one package, break by weight.
+ * Packaging strategy. Uses product volumes to determine number of packages.
  */
 
 
@@ -30,9 +30,9 @@
 class PackageByVolume extends PackagingStrategy {
 
   /**
-   * Implements Strategy::strategy().
+   * Implements Strategy::packageProducts().
    */
-  public function strategy($products) {
+  public function packageProducts($products) {
 
     // Create first package.
     $package = new Package();

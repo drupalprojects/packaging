@@ -76,7 +76,7 @@ function packaging_package_products($products) {
   $strategy->setDefaultWeightUnits('LB');
   $strategy->setWeightMarkupFunction('packaging_weight_markup');
 
-  $packages = $strategy->strategy($products);
+  $packages = $strategy->packageProducts($products);
 
   return $packages;
 }

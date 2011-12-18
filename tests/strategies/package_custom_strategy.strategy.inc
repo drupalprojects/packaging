@@ -22,9 +22,9 @@
 class PackageCustomStrategy extends PackagingStrategy {
 
   /**
-   * Implements Strategy::strategy().
+   * Implements Strategy::packageProducts().
    */
-  public function strategy($products) {
+  public function packageProducts($products) {
 
     // Create first and only package.
     $package = new Package();

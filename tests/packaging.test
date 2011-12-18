@@ -46,7 +46,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $strategy->setDefaultWeightUnits('LB');
     $strategy->setWeightMarkupFunction('packaging_weight_markup');
 
-    $packages = $strategy->strategy($this->products);
+    $packages = $strategy->packageProducts($this->products);
 
     debug($packages);
 
@@ -68,7 +68,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $strategy->setDefaultWeightUnits('LB');
     $strategy->setWeightMarkupFunction('packaging_weight_markup');
 
-    $packages = $strategy->strategy($this->products);
+    $packages = $strategy->packageProducts($this->products);
 
     debug($packages);
 
@@ -98,7 +98,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $strategy->setDefaultWeightUnits('LB');
     $strategy->setWeightMarkupFunction('packaging_weight_markup');
 
-    $packages = $strategy->strategy($this->products);
+    $packages = $strategy->packageProducts($this->products);
 
     debug($packages);
     // Actual number of boxes
@@ -124,7 +124,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $strategy->setDefaultWeightUnits('LB');
     $strategy->setWeightMarkupFunction('packaging_weight_markup');
 
-    $packages = $strategy->strategy($this->products);
+    $packages = $strategy->packageProducts($this->products);
 
     debug($packages);
   }
