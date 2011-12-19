@@ -101,10 +101,42 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $packages = $strategy->packageProducts($this->products);
 
     debug($packages);
-    // Actual number of boxes
+
+    // Product aggregates.
+    $product_aggregate = new Product();
+    foreach ($this->products as $product) {
+      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $strategy->getDefaultWeightUnits()));
+      $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
+    }
+    $this->pass(t('Total weight of products = %total %units.', array('%total' => $product_aggregate->getWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+
+    // Package aggregates.
+    $package_aggregate = new Package();
+    foreach ($packages as $package) {
+      $package_aggregate->setWeight($package_aggregate->getWeight() + $package->getWeight());
+      $package_aggregate->setShipWeight($package_aggregate->getShipWeight() + $package->getShipWeight());
+      $package_aggregate->setQuantity($package_aggregate->getQuantity() + $package->getQuantity());
+    }
+    $this->pass(t('Total package weight = %total %units.', array('%total' => $package_aggregate->getWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+    $this->pass(t('Total package weight after weight markup = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+    $this->pass(t('Total ship weight of packages = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+
+    // Test to see if the strategy produced the expected total weight.
+    $this->assertTrue(
+      ($package_aggregate->getWeight() == $product_aggregate->getWeight()),
+      t('Total weight of packages equals total weight of products.')
+    );
+
+    // Test to see if the strategy produced the expected weight markup.
+    $this->assertTrue(
+      ($package_aggregate->getShipWeight() == packaging_weight_markup($product_aggregate->getWeight())),
+      t('Ship weight of packages equals total weight of products with markup.')
+    );
+
+    // Actual number of boxes.
     $actual_number_of_packages = count($packages);
 
-    // Calculate expected number of boxes
+    // Calculate expected number of boxes.
     $expected_number_of_packages = 1;
 
     // Test to see if the strategy produced the expected number of boxes.
@@ -147,7 +179,8 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
    */
   function loadIncludes() {
     drupal_load('module', 'packaging');
-    module_load_include('inc', 'packaging', 'classes/packaging');
+    drupal_load('module', 'uc_store');
+    module_load_include('inc', 'packaging', 'classes/package');
     module_load_include('inc', 'packaging', 'classes/product');
     module_load_include('inc', 'packaging', 'classes/strategy');
     module_load_include('inc', 'packaging', 'strategies/package_each_in_own.strategy');
