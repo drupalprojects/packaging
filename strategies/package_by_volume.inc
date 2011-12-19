@@ -2,19 +2,21 @@
 
 /**
  * @file
- * Packaging strategy. Packages all products in one package, break by weight.
+ * Packaging strategy. Packages all products in one package, break by volume.
  */
 
 
 /**
- * Puts all products into packages, subject only to package maximum weight.
+ * Puts all products into packages, subject only to package maximum volume.
  *
- * The "All-in-one" strategy is a general-purpose packaging strategy which
- * attempts to put all products into one package, subject only to a maximum
- * weight. When the maximum weight is exceeded, a new package will be created.
+ * The "By volume" is the equivalent of the "All-in-one" strategy, except
+ * product and package volume is used instead of product and package weight.
+ * "By volume" is a general-purpose packaging strategy which attempts to put
+ * all products into one package, subject only to a maximum volume. When the
+ * maximum volume is exceeded, a new package will be created.
  *
- * Products are added to packages one-by-one, in order of weight with the
- * heaviest products added first. If adding a product will exceed the package
+ * Products are added to packages one-by-one, in order of volume with the
+ * largest products added first. If adding a product will exceed the package
  * maximum weight, this strategy looks for available space in any
  * previously-created packages and attempts to add the product to one of those.
  * If the product won't fit into any existing packages, a new package is
@@ -30,7 +32,7 @@
  * This strategy will always return the same results if given the same set of
  * products.
  */
-class PackageAllInOne extends PackagingStrategy {
+class PackageByVolume extends PackagingStrategy {
 
   /**
    * Implements Strategy::packageProducts().
@@ -139,7 +141,7 @@ class PackageAllInOne extends PackagingStrategy {
     if ($a == $b) {
       return 0;
     }
-    // Reverse order
+    // Reverse order.
     return ($weight_a < $weight_b) ? 1 : -1;
   }
 

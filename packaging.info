@@ -10,12 +10,12 @@ files[] = classes/product.inc
 files[] = classes/strategy.inc
 
 ; Packaging strategies
-files[] = strategies/package_all_in_one.strategy.inc
-files[] = strategies/package_each_in_own.strategy.inc
-files[] = strategies/package_one_package.strategy.inc
-files[] = strategies/package_average_weight.strategy.inc
-files[] = strategies/package_by_volume.strategy.inc
-files[] = strategies/package_average_volume.strategy.inc
+files[] = strategies/package_all_in_one.inc
+files[] = strategies/package_each_in_own.inc
+files[] = strategies/package_one_package.inc
+files[] = strategies/package_average_weight.inc
+files[] = strategies/package_by_volume.inc
+files[] = strategies/package_average_volume.inc
 
 ; Test cases
 files[] = tests/packaging.test
