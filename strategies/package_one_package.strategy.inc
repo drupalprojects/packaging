@@ -9,7 +9,7 @@
 /**
  * Puts all products into one package, with no restrictions.
  *
- * The "One package" stragegy is an extremely simple packaging strategy which
+ * The "One package" strategy is an extremely simple packaging strategy which
  * puts all products into one package. This strategy doesn't care about
  * product weights or any other metric - everything goes into one package,
  * period.
@@ -24,7 +24,7 @@ class PackageOnePackage extends PackagingStrategy {
   /**
    * Implements Strategy::packageProducts().
    */
-  public function packageProducts($products) {
+  public function packageProducts(array $products) {
 
     // Create first and only package.
     $package = new Package();
