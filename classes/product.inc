@@ -26,6 +26,9 @@ class Product {
   protected $length_units = 'IN';
 
 
+  /**
+   * Constructs a new Product object given a Drupal Commerce Product entity.
+   */
   public static function constructFromCommerceProduct($product) {
 
     $contruct = new Product();
@@ -33,6 +36,10 @@ class Product {
     return $contruct;
   }
 
+  /**
+   * Constructs a new Product object given an array of Drupal Commerce Product
+   * entities.
+   */
   public static function constructFromCommerceProductMultiple(array $products) {
     $constructs = array();
 
@@ -44,6 +51,9 @@ class Product {
   }
 
 
+  /**
+   * Constructs a new Product object given an Ubercart Product object.
+   */
   public static function constructFromUbercartProduct($product) {
 
     // New instance.
@@ -66,6 +76,9 @@ class Product {
     return $contruct;
   }
 
+  /**
+   * Constructs a new Product object given an array of Ubercart Product objects.
+   */
   public static function constructFromUbercartProductMultiple(array $products) {
     $constructs = array();
 

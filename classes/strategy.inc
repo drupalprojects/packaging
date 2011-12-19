@@ -17,8 +17,11 @@ abstract class PackagingStrategy {
 
   /** Constant used in internal implementation to indicate unlimited weight */
   const UNLIMITED_PACKAGE_WEIGHT = -1;
+  const UNLIMITED_PACKAGE_VOLUME = -1;
 
   protected $maximum_weight = self::UNLIMITED_PACKAGE_WEIGHT;
+  protected $maximum_volume = self::UNLIMITED_PACKAGE_VOLUME;
+  protected $length_units = 'IN';
   protected $weight_units = 'LB';
   protected $weight_markup_function = 'packaging_weight_markup';
 
