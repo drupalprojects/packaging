@@ -10,11 +10,11 @@
  * Puts each product line item into its own package, subject only to package
  * quantity restriction for that line item.
  *
- * The "Each-in-own" stragegy is a general-purpose packaging strategy which
+ * The "Each-in-own" strategy is a general-purpose packaging strategy which
  * puts each product line item into its own package. This strategy is intended
- * for products which come pre-packaged into shippable cases.  The product's
+ * for products which come pre-packaged in shippable cases. The product's
  * package quantity property restricts the number in each package, so if more
- * than that number are in the order, multiple packages will be sent.  This is
+ * than that number are in the order, multiple packages will be sent. This is
  * useful for products that come in cases, for example, since exceeding the
  * case quantity means you will have to ship more than one case.
  *
@@ -28,7 +28,7 @@ class PackageEachInOwn extends PackagingStrategy {
   /**
    * Implements Strategy::packageProducts().
    */
-  public function packageProducts($products) {
+  public function packageProducts(array $products) {
     // Each product line item in its own package, subject only to pkg_qty.
 
     // Loop over products.
@@ -40,14 +40,18 @@ class PackageEachInOwn extends PackagingStrategy {
       }
       // Calculate number of full packages.
       $num_of_pkgs = (int) ($product->getQuantity() / $product->getPackageQuantity());
+      // Calculate product weight in default units.
+      $item_weight = $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $this->getDefaultWeightUnits());
+
       if ($num_of_pkgs) {
-        // Full packages
+        // These are full packages.
         for ($i = 0; $i < $num_of_pkgs; $i++) {
           // Create full packages.
           $package = new Package();
-          $package->setQuantity($product->getPackageQuantity());
-          $package->setPrice($product->getPrice()   * $product->getPackageQuantity());
-          $package->setWeight($product->getWeight() * $product->getPackageQuantity());
+          $product_quantity = $product->getPackageQuantity();
+          $package->setQuantity($product_quantity);
+          $package->setPrice($product->getPrice() * $product_quantity);
+          $package->setWeight($item_weight * $product_quantity);
           $package->setWeightUnits($this->getDefaultWeightUnits());
 
           // Markup weight on a per-package basis.
@@ -64,8 +68,8 @@ class PackageEachInOwn extends PackagingStrategy {
         // Create partially-full packages.
         $package = new Package();
         $package->setQuantity($remaining_qty);
-        $package->setPrice($product->getPrice()  * $remaining_qty);
-        $package->setWeight($product->getWeight() * $remaining_qty);
+        $package->setPrice($product->getPrice() * $remaining_qty);
+        $package->setWeight($item_weight * $remaining_qty);
         $package->setWeightUnits($this->getDefaultWeightUnits());
 
         // Markup weight on a per-package basis.
