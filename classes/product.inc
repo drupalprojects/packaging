@@ -22,6 +22,7 @@ class Product {
   protected $length       = 0.0;
   protected $width        = 0.0;
   protected $height       = 0.0;
+  protected $volume       = 0.0;
   protected $length_units = 'IN';
 
 
@@ -59,6 +60,7 @@ class Product {
     $contruct->length       = $product->length;
     $contruct->width        = $product->width;
     $contruct->height       = $product->height;
+    $contruct->volume       = $product->length * $product->width * $product->height;
     $contruct->length_units = $product->length_units;
 
     return $contruct;
@@ -138,10 +140,75 @@ class Product {
   }
 
   /**
-   * Mutator for weight property.
+   * Mutator for weight_units property.
    */
   public function setWeightUnits($weight_units) {
     $this->weight_units = $weight_units;
+  }
+
+  /**
+   * Accessor for length property.
+   */
+  public function getLength() {
+    return $this->length;
+  }
+
+  /**
+   * Mutator for length property.
+   */
+  public function setLength($length) {
+    $this->length = $length;
+    // Re-compute volume
+    $this->volume = $this->length * $this->width * $this->height;
+  }
+
+  /**
+   * Accessor for width property.
+   */
+  public function getWidth() {
+    return $this->width;
+  }
+
+  /**
+   * Mutator for width property.
+   */
+  public function setWidth($width) {
+    $this->width = $width;
+    // Re-compute volume
+    $this->volume = $this->length * $this->width * $this->height;
+  }
+
+  /**
+   * Accessor for height property.
+   */
+  public function getHeight() {
+    return $this->height;
+  }
+
+  /**
+   * Mutator for height property.
+   */
+  public function setHeight($height) {
+    $this->height = $height;
+    // Re-compute volume
+    $this->volume = $this->length * $this->width * $this->height;
+  }
+
+  /**
+   * Accessor for length_units property.
+   */
+  public function getLengthUnits() {
+    return $this->length_units;
+  }
+
+  /**
+   * Mutator for length_units property.
+   */
+  public function setLengthUnits($length_units) {
+    $this->length_units = $length_units;
+    // Re-compute volume.  Volume is always expressed in terms of the cube of
+    // the product weight units.
+    $this->volume = $this->length * $this->width * $this->height;
   }
 
 }
