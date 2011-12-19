@@ -77,6 +77,10 @@ class PackageAllInOne extends PackagingStrategy {
               $filled_package->setQuantity($filled_package->getQuantity() + 1);
               $filled_package->setPrice($filled_package->getPrice() + $product->getPrice());
               $filled_package->setWeight($filled_package->getWeight() + $item_weight);
+              // Because we've added a product, we need to adjust the weight
+              // markup weight of this previously-filled package.
+              $filled_package->setShipWeight(packaging_weight_markup($package->getWeight()));
+
             }
             else {
               // If all else fails, start a new package.
