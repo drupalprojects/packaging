@@ -34,17 +34,30 @@ abstract class PackagingStrategy {
    * @return
    *   An array of Package objects, each containing one or more of the products.
    */
-  abstract public function packageProducts($products);
+  abstract public function packageProducts(array $products);
 
   /**
-   *
+   * Mutator for maximum_weight property.
    */
   public function setMaximumPackageWeight($maximum_weight = self::UNLIMITED_PACKAGE_WEIGHT) {
     $this->maximum_weight = $maximum_weight;
   }
 
   /**
+   * Accessor for maximum_weight property.
+   */
+  public function getMaximumPackageWeight() {
+    return $this->maximum_weight;
+  }
+
+  /**
+   * Compares weight against maximum allowed weight.
    *
+   * @param $weight
+   *   Float containing weight in default weight units.
+   *
+   * @return
+   *   TRUE if $weight exceeds maximum allowed weight, FALSE otherwise.
    */
   public function exceedsMaximumPackageWeight($weight) {
     if ($this->maximum_weight != self::UNLIMITED_PACKAGE_WEIGHT &&
@@ -55,7 +68,13 @@ abstract class PackagingStrategy {
   }
 
   /**
+   * Compares weight against maximum allowed weight.
    *
+   * @param $weight
+   *   Float containing weight in default weight units.
+   *
+   * @return
+   *   TRUE if $weight is less than the maximum allowed weight, FALSE otherwise.
    */
   public function lessThanMaximumPackageWeight($weight) {
     if ($this->maximum_weight == self::UNLIMITED_PACKAGE_WEIGHT ||
@@ -70,6 +89,7 @@ abstract class PackagingStrategy {
    */
   public function setDefaultWeightUnits($weight_units = 'LB') {
     $this->weight_units = $weight_units;
+    // @todo: Need to modify $maximum_weight to agree with the new units.
   }
 
   /**
