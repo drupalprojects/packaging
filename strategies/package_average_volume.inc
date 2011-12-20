@@ -7,25 +7,12 @@
 
 
 /**
- * Puts all products into packages, subject only to package maximum weight.
+ * Puts all products into packages, subject only to package maximum volume.
  *
- * The "All-in-one" strategy is a general-purpose packaging strategy which
- * attempts to put all products into one package, subject only to a maximum
- * weight. When the maximum weight is exceeded, more than one package will
- * be created.
- *
- * Products are added to packages one-by-one, in the order they are passed to
- * the strategy method. If adding a product will exceed the package maximum
- * weight, this strategy looks for available space in any previously-created
- * packages and attempts to add the product to one of those. If the product
- * won't fit into any existing packages, a new package is created.
- *
- * If your product weights are small compared to your maximum package weight
- * this strategy will approximate an optimal packing. However, no attempt is
- * made to optimize packing, so the number of packages returned by this
- * strategy is not guaranteed to be the minimum possible number. This strategy
- * mimics how a human would put products into packages, which is also not
- * guaranteed to be optimal, but is what will occur in practice.
+ * The "Average volume" strategy computes the number of packages needed by
+ * dividing the total volume of all products by the maximum allowed package
+ * volume. The resulting packages are assigned identical weights, prices, etc.
+ * so as to simulate uniform distribution of products amongst the packages.
  */
 class PackageAverageVolume extends PackagingStrategy {
 
