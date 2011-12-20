@@ -1,11 +1,31 @@
+<?php
 
 /**
- * Implements hook_views_api().
+ * @file
+ * Helper module for Packaging tests. 
+ */
+
+
+/**
+ * Implements hook_packaging_api().
  */
 function packaging_test_packaging_api() {
   return array(
-    'api' => '2.0',
-    'path' => drupal_get_path('module', 'uc_product') . '/strategies',
+    'api' => '1.0',
+    'path' => drupal_get_path('module', 'packaging_test') . '/strategies',
   );
 }
 
+/**
+ * Implements hook_MODULE_PLUGIN().
+ */
+function packaging_test_packaging_strategy() {
+  return array(
+    'custom' => array(
+      'label' => t('Custom'),
+      'handler' => array(
+        'class' => 'PackageCustomStrategy',
+      ),
+    ),
+  );
+}

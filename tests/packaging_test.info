@@ -2,3 +2,6 @@ name = Packaging module hook and plugin tests
 description = Support module for Packaging tests
 core = 7.x
 hidden = TRUE
+
+; Packaging strategies
+files[] = strategies/package_custom_strategy.inc
