@@ -112,65 +112,184 @@ function packaging_weight_markup($weight) {
 }
 
 /**
- * Implements hook_ctools_plugin_api_hook_name().
+ * Implements hook_menu().
  */
-function packaging_ctools_plugin_api_hook_name() {
-  return 'packaging_api';
+function packaging_menu() {
+  $items = array();
+
+  $items['packaging'] = array(
+    'title' => 'Store',
+    'description' => 'Administer',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('print_info'),
+    'access callback' => TRUE,
+    'type'             => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
 }
 
-// Declare API compatibility on behalf of core modules:
+
+/******************************************************************************
+ * CTools plugin hooks.
+ ******************************************************************************/
+
 
 /**
- * Implements hook_packaging_api().
- *
- * This one is used as the base to reduce errors when updating.
+ * Implements hook_ctools_plugin_type().
  */
-function packaging_packaging_api() {
+function packaging_ctools_plugin_type() {
   return array(
-    // in your modules do *not* use packaging_api_version()!!!
-    'api' => packaging_api_version(),
-    'path' => drupal_get_path('module', 'packaging') . '/strategies',
+    'strategy' => array(
+      // If FALSE, will ignore hook_MODULE_PLUGIN() and generate automatic hook.
+      'use hooks' => TRUE,
+
+    ),
   );
 }
 
 /**
- * Advertises the current Packaging API version.
+ * Implements hook_ctools_plugin_directory().
  */
-function packaging_api_version() {
-  return '1.0';
+function packaging_ctools_plugin_directory($module, $plugin) {
+  if (($module == 'packaging') && ($plugin == 'strategy')) {
+    return 'strategies';
+  }
 }
 
 /**
- * Include views .inc files as necessary.
+ * Implements hook_MODULE_PLUGIN().
  */
-function packaging_include($file) {
-  ctools_include($file, 'strategies');
+function packaging_packaging_strategy() {
+  return array(
+    'allinone' => array(
+      'label' => t('All-in-one'),
+      'handler' => array(
+        'class' => 'PackageAllInOne',
+        //'class' => 'package_all_in_one',
+      ),
+    //  'path' => drupal_get_path('module', 'packaging') . '/strategies',
+    ),
+    'eachinown' => array(
+      'label' => t('Each in own'),
+      'handler' => array(
+        'class' => 'PackageEachInOwn',
+        //'class' => 'package_each_in_own',
+      ),
+    ),
+    'byvolume' => array(
+      'label' => t('By volume'),
+      'handler' => array(
+        'class' => 'PackageByVolume',
+        //'class' => 'package_by_volume',
+      ),
+    ),
+    'onepackage' => array(
+      'label' => t('One package'),
+      'handler' => array(
+        'class' => 'PackageOnePackage',
+        //'class' => 'package_one_package',
+      ),
+    ),
+    'averageweight' => array(
+      'label' => t('Average weight'),
+      'handler' => array(
+        'class' => 'PackageAverageWeight',
+        //'class' => 'package_average_weight',
+      ),
+    ),
+    'averagevolume' => array(
+      'label' => t('Average volume'),
+      'handler' => array(
+        'class' => 'PackageAverageVolume',
+        //'class' => 'package_average_volume',
+      ),
+    ),
+  );
 }
 
 /**
- * Load views files on behalf of modules.
+ * Helper function.  Fetches metadata for all strategy plugins.
+ *
+ * @return
+ *   An array of arrays with information about all available packaging
+ *   strategies.
  */
-function packaging_module_include($api, $reset = FALSE) {
-  if ($reset) {
-    $cache = &drupal_static('ctools_plugin_api_info');
-    if (isset($cache['packaging']['strategies'])) {
-      unset($cache['packaging']['strategies']);
+function packaging_get_strategy($id) {
+  ctools_include('plugins');
+  return ctools_get_plugins('packaging', 'strategy', $id);
+}
+
+/**
+ * Helper function.  Fetches metadata for all strategy plugins.
+ *
+ * @return
+ *   An array of arrays with information about all available packaging
+ *   strategies.
+ */
+function packaging_get_strategies() {
+  ctools_include('plugins');
+  return ctools_get_plugins('packaging', 'strategy');
+}
+
+/**
+ * Menu callback.
+ */
+function print_info() {
+
+  $operations = packaging_get_strategies();
+  $options = array();
+  foreach ($operations as $id => $operation) {
+    $options[$id] = $operation['label'];
+  }
+
+  $form['strategy'] = array(
+    '#type' => 'select',
+    '#title' => t('Please choose Strategy'),
+    '#options' => $options,
+  );
+
+  $form['operations'] = array(
+    '#markup' => '<pre>' . var_export($operations, TRUE) . '</pre>',
+  );
+
+  $form['actions'] = array('#type' => 'actions');
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Select strategy'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit handler.
+ */
+function print_info_submit($form, &$form_state) {
+  $operation = $form_state['values']['strategy'];
+dpm($operation);
+  if ($instance = packaging_get_instance($operation)) {
+    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) ."</pre>");
+  }
+  else {
+  }
+}
+
+function packaging_get_instance($id) {
+
+  $instances = &drupal_static(__FUNCTION__);
+
+  if (!isset($instances[$id])) {
+    $plugin = packaging_get_strategy($id);
+    $class = ctools_plugin_get_class($plugin, 'handler');
+dpm($class);
+    $instances[$id] = new $class();
+
+    // Check that plugin class is a subclass of 'PackagingStrategy'.
+    if (!is_subclass_of($instances[$id], 'PackagingStrategy')) {
+      $instances[$id] = NULL;
     }
   }
-  ctools_include('plugins');
-  return ctools_plugin_api_include('packaging', $api, packaging_api_minimum_version(), packaging_api_version());
-}
 
-/**
- * Get a list of modules that support the current views API.
- */
-function packaging_get_module_apis($api = 'views', $reset = FALSE) {
-  if ($reset) {
-    $cache = &drupal_static('ctools_plugin_api_info');
-    if (isset($cache['packagin']['views'])) {
-      unset($cache['packagin']['views']);
-    }
-  }
-  ctools_include('plugins');
-  return ctools_plugin_api_info('packagin', $api, packaging_api_minimum_version(), packaging_api_version());
+  return $instances[$id];
 }
