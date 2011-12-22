@@ -2,18 +2,17 @@
 
 /**
  * @file
- * Helper module for Packaging tests. 
+ * Helper module for Packaging tests.
  */
 
 
 /**
- * Implements hook_packaging_api().
+ * Implements hook_ctools_plugin_directory().
  */
-function packaging_test_packaging_api() {
-  return array(
-    'api' => '1.0',
-    'path' => drupal_get_path('module', 'packaging_test') . '/strategies',
-  );
+function packaging_test_ctools_plugin_directory($module, $plugin) {
+  if (($module == 'packaging') && ($plugin == 'strategy')) {
+    return 'strategies';
+  }
 }
 
 /**
