@@ -211,6 +211,9 @@ function packaging_packaging_strategy() {
 /**
  * Helper function.  Fetches metadata for all strategy plugins.
  *
+ * @param $id
+ *   Plugin identifier, as returned by hook_packaging_strategy().
+ *
  * @return
  *   An array of arrays with information about all available packaging
  *   strategies.
@@ -267,22 +270,28 @@ function print_info() {
  */
 function print_info_submit($form, &$form_state) {
   $operation = $form_state['values']['strategy'];
-dpm($operation);
   if ($instance = packaging_get_instance($operation)) {
     drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) ."</pre>");
   }
-  else {
-  }
 }
 
+/**
+ * Instantiates a packaging strategy class.
+ *
+ * @param $id
+ *   Plugin identifier, as returned by hook_packaging_strategy().
+ *
+ * @return
+ *   Reference to the class instance.
+ */
 function packaging_get_instance($id) {
-
+  // Cache strategy instances.
   $instances = &drupal_static(__FUNCTION__);
 
   if (!isset($instances[$id])) {
+    // Not cached yet, so find and put in cache.
     $plugin = packaging_get_strategy($id);
     $class = ctools_plugin_get_class($plugin, 'handler');
-dpm($class);
     $instances[$id] = new $class();
 
     // Check that plugin class is a subclass of 'PackagingStrategy'.

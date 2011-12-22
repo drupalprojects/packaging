@@ -70,10 +70,21 @@ must be shipped in case lots.
 Defining your own strategy
 ==========================
 
-1) Create a new module.
-2) Module should contain a subclass PackagingStrategy.
-3) Implement the packageProducts() function in your subclass.
-4) Register your strategy using hook_packaging_strategy().
+An example of a module that creates a new packaging strategy,
+packaging_test.module, may be found in the tests subdirectory. Use this
+working example as a guide when writing your own module.  Here are the
+minimum necessary steps:
+
+1) Create a new module for your strategy.
+2) Module must implement two hooks:
+   a) hook_test_ctools_plugin_directory() - indicates where your module's
+      plugings can be found. Typically this would be in a subdirectory under
+      your module's main directory.
+   b) hook_packaging_strategy() - declares the strategy name(s) and handler
+      class(es) for any packaging strategies implemented by your module.
+3) Create an include file in your plugin directory with defines a subclass
+   of PackagingStrategy.
+4) Implement the packageProducts() function in your subclass.
 5) In the module that uses strategies (e.g. Ubercart or Commerce),
    set up a rule to select your strategy under the appropriate conditions.
 
