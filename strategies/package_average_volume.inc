@@ -17,7 +17,14 @@
 class PackageAverageVolume extends PackagingStrategy {
 
   /**
-   * Implements Strategy::packageProducts().
+   * Implements PackagingStrategy::getDescription().
+   */
+  public function getDescription() {
+    return t("The 'Average volume' strategy computes the number of packages needed by dividing the total volume of all products by the maximum allowed package volume. The resulting packages are assigned identical weights, prices, etc. so as to simulate uniform distribution of products amongst the packages.");
+  }
+
+  /**
+   * Implements PackagingStrategy::packageProducts().
    */
   public function packageProducts(array $products) {
 

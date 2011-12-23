@@ -12,7 +12,14 @@
 class PackageCustomStrategy extends PackagingStrategy {
 
   /**
-   * Implements Strategy::packageProducts().
+   * Implements PackagingStrategy::getDescription().
+   */
+  public function getDescription() {
+    return t("This strategy always creates 23 boxes, regardless of number of products in order. Its only use is to provide a custom strategy for automated testing of the Packaging module.");
+  }
+
+  /**
+   * Implements PackagingStrategy::packageProducts().
    */
   public function packageProducts(array $products) {
     $package = array();

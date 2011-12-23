@@ -40,6 +40,16 @@ abstract class PackagingStrategy {
   abstract public function packageProducts(array $products);
 
   /**
+   * Describes the packaging algorithm implemented by subclasses.
+   *
+   * @return
+   *   String containing a description of the packaging strategy.
+   */
+  public function getDescription() {
+    return t('No description is available for this packaging method.');
+  }
+
+  /**
    * Mutator for maximum_weight property.
    */
   public function setMaximumPackageWeight($maximum_weight = self::UNLIMITED_PACKAGE_WEIGHT) {
