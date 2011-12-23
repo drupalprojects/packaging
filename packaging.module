@@ -117,6 +117,16 @@ function packaging_weight_markup($weight) {
 function packaging_menu() {
   $items = array();
 
+  $items['admin/store/settings/quotes/settings/packaging'] = array(
+    'title'            => 'Packaging',
+    'page callback'    => 'drupal_get_form',
+    'page arguments'   => array('packaging_admin_settings'),
+    'access arguments' => array('configure packaging'),
+    'type'             => MENU_LOCAL_TASK,
+    'file'             => 'packaging.admin.inc',
+  );
+
+
   $items['packaging'] = array(
     'title' => 'Store',
     'description' => 'Administer',
@@ -124,6 +134,7 @@ function packaging_menu() {
     'page arguments' => array('print_info'),
     'access callback' => TRUE,
     'type'             => MENU_NORMAL_ITEM,
+    'file'             => 'packaging.admin.inc',
   );
 
   return $items;
@@ -234,47 +245,6 @@ function packaging_get_strategies() {
   ctools_include('plugins');
   return ctools_get_plugins('packaging', 'strategy');
 }
-
-/**
- * Menu callback.
- */
-function print_info() {
-
-  $operations = packaging_get_strategies();
-  $options = array();
-  foreach ($operations as $id => $operation) {
-    $options[$id] = $operation['label'];
-  }
-
-  $form['strategy'] = array(
-    '#type' => 'select',
-    '#title' => t('Please choose Strategy'),
-    '#options' => $options,
-  );
-
-  $form['operations'] = array(
-    '#markup' => '<pre>' . var_export($operations, TRUE) . '</pre>',
-  );
-
-  $form['actions'] = array('#type' => 'actions');
-  $form['actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Select strategy'),
-  );
-
-  return $form;
-}
-
-/**
- * Submit handler.
- */
-function print_info_submit($form, &$form_state) {
-  $operation = $form_state['values']['strategy'];
-  if ($instance = packaging_get_instance($operation)) {
-    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) ."</pre>");
-  }
-}
-
 /**
  * Instantiates a packaging strategy class.
  *
