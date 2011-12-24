@@ -48,15 +48,15 @@ This strategy will always return the same results if given the same set of produ
   /**
    * Implements PackagingStrategy::packageProducts().
    */
-  public function packageProducts(array $products) {
+  public function packageProducts(PackagingContext $context, array $products) {
 
     // Loop over products.
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the store
       // weight units.
-      $product->setWeight($product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $this->getDefaultWeightUnits()));
-      $product->setWeightUnits($this->getDefaultWeightUnits());
+      $product->setWeight($product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product->setWeightUnits($context->getDefaultWeightUnits());
     }
 
     // Sort products from heaviest to lightest to make packaging deterministic.
@@ -65,15 +65,15 @@ This strategy will always return the same results if given the same set of produ
 
     // Create first package.
     $packages = array();
-    $package  = new Package();
-    $package->setWeightUnits($this->getDefaultWeightUnits());
+    $package  = new PackagingPackage();
+    $package->setWeightUnits($context->getDefaultWeightUnits());
 
     // Loop over products.
     foreach ($products as $product) {
       // Get product weight.
       $product_weight = $product->getWeight();
 
-      if ($this->exceedsMaximumPackageWeight($product_weight)) {
+      if ($context->exceedsMaximumPackageWeight($product_weight)) {
         // This product is too heavy to ship - quit with error.
         return array();
       }
@@ -82,7 +82,7 @@ This strategy will always return the same results if given the same set of produ
       for ($item = 0; $item < $product->getQuantity(); $item++) {
         // Test to see if putting this item into the current package will put
         // us over the package weight limit.
-        if ($this->lessThanMaximumPackageWeight($package->getWeight() + $product_weight)) {
+        if ($context->lessThanMaximumPackageWeight($package->getWeight() + $product_weight)) {
           // No?  Then update the package information and continue.
           $package->setQuantity($package->getQuantity() + 1);
           $package->setPrice($package->getPrice() + $product->getPrice());
@@ -95,7 +95,7 @@ This strategy will always return the same results if given the same set of produ
           $found_space = FALSE;
           foreach ($packages as &$filled_package) {
             // Will it fit?
-            if ($this->lessThanMaximumPackageWeight($filled_package->getWeight() + $product_weight)) {
+            if ($context->lessThanMaximumPackageWeight($filled_package->getWeight() + $product_weight)) {
               // Yes, update values for previously-filled package.
               $found_space = TRUE;
               $filled_package->setQuantity($filled_package->getQuantity() + 1);
@@ -120,11 +120,11 @@ This strategy will always return the same results if given the same set of produ
             $packages[] = $package;
 
             // Put this item into a new package.
-            $package = new Package();
+            $package = new PackagingPackage();
             $package->setQuantity(1);
             $package->setPrice($product->getPrice());
             $package->setWeight($product_weight);
-            $package->setWeightUnits($this->getDefaultWeightUnits());
+            $package->setWeightUnits($context->getDefaultWeightUnits());
           }
         }
       }
@@ -143,9 +143,9 @@ This strategy will always return the same results if given the same set of produ
   }
 
   /**
-   * Sort callback. Sorts array of Product objects by weight from high to low.
+   * Sort callback. Sorts array of PackagingProduct objects by weight from high to low.
    */
-  protected static function compareWeights(Product $a, Product $b) {
+  protected static function compareWeights(PackagingProduct $a, PackagingProduct $b) {
     $weight_a = $a->getWeight();
     $weight_b = $b->getWeight();
 

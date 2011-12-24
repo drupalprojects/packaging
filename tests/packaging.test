@@ -42,20 +42,21 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAllInOne() {
     $this->pass(t('Testing PackageAllInOne strategy'));
 
-    $strategy = new PackageAllInOne();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageAllInOne());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     //debug($packages);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -89,20 +90,21 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageEachInOwn() {
     $this->pass(t('Testing PackageEachInOwn strategy'));
 
-    $strategy = new PackageEachInOwn();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageEachInOwn());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     //debug($packages);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -138,20 +140,21 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageOnePackage() {
     $this->pass(t('Testing PackageOnePackage strategy'));
 
-    $strategy = new PackageOnePackage();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageOnePackage());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     //debug($packages);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -186,20 +189,21 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageByVolume() {
     $this->pass(t('Testing PackageAllInOne strategy'));
 
-    $strategy = new PackageByVolume();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageByVolume());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     //debug($packages);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -233,18 +237,19 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAverageWeight() {
     $this->pass(t('Testing PackageAverageWeight strategy'));
 
-    $strategy = new PackageAverageWeight();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageAverageWeight());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -262,7 +267,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $actual_number_of_packages = count($packages);
 
     // Calculate expected number of boxes.
-    $expected_number_of_packages = ceil($product_aggregate->getWeight() / $strategy->getMaximumPackageWeight());
+    $expected_number_of_packages = ceil($product_aggregate->getWeight() / $context->getMaximumPackageWeight());
 
     // Test to see if the strategy produced the expected number of boxes.
     $this->assertTrue(
@@ -277,18 +282,19 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAverageVolume() {
     $this->pass(t('Testing PackageAverageVolume strategy'));
 
-    $strategy = new PackageAverageVolume();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageAverageVolume());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     // Actual number of boxes.
     $actual_number_of_packages = count($packages);
 
     // Calculate expected number of boxes.
-    //$expected_number_of_packages = ceil($product_aggregate->getVolume() / $strategy->getMaximumPackageVolume());
+    //$expected_number_of_packages = ceil($product_aggregate->getVolume() / $context->getMaximumPackageVolume());
 
     // Test to see if the strategy produced the expected number of boxes.
     //$this->assertTrue(
@@ -303,20 +309,21 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function junktestPackageByVolume() {
     $this->pass(t('Testing PackageByVolume strategy'));
 
-    $strategy = new PackageByVolume();
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageByVolume());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
     //debug($packages);
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -340,24 +347,24 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Test plugin system to see that any custom plugin gets picked up.
     // PackageCustomStrategy is defined by the packaging_test module.
-    $strategy = packaging_get_instance('custom');
+    //$strategy = packaging_get_instance('custom');
 
     // Test to see if it was found!
 
-    $strategy->setMaximumPackageWeight(15);
-    $strategy->setDefaultWeightUnits('LB');
-    $strategy->setWeightMarkupFunction('packaging_weight_markup');
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageCustomStrategy());
 
-    $packages = $strategy->packageProducts($this->products);
+    $packages = $context->packageProducts($this->products);
 
 
     // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($strategy, $this->products);
-    debug($product_aggregate);
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
 
     // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($strategy, $packages);
-    debug($package_aggregate);
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
 
     // Test to see if the strategy produced the expected total weight.
     $this->assertTrue(
@@ -399,6 +406,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     drupal_load('module', 'uc_store');
     module_load_include('inc', 'packaging', 'classes/package');
     module_load_include('inc', 'packaging', 'classes/product');
+    module_load_include('inc', 'packaging', 'classes/context');
     module_load_include('inc', 'packaging', 'classes/strategy');
     module_load_include('inc', 'packaging', 'strategies/package_each_in_own');
     module_load_include('inc', 'packaging', 'strategies/package_all_in_one');
@@ -412,14 +420,14 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   /**
    * Returns a Product object containing aggregate information.
    */
-  function getProductAggregate(PackagingStrategy $strategy, array $products) {
-    $product_aggregate = new Product();
-    $product_aggregate->setWeightUnits($strategy->getDefaultWeightUnits());
+  function getProductAggregate(PackagingContext $context, array $products) {
+    $product_aggregate = new PackagingProduct();
+    $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     foreach ($this->products as $product) {
-      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $strategy->getDefaultWeightUnits()));
+      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
     }
-    $this->pass(t('Total weight of products = %total %units.', array('%total' => $product_aggregate->getWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+    $this->pass(t('Total weight of products = %total %units.', array('%total' => $product_aggregate->getWeight(), '%units' => $context->getDefaultWeightUnits())));
 
     return $product_aggregate;
   }
@@ -427,17 +435,17 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   /**
    * Returns a Package object containing aggregate information.
    */
-  function getPackageAggregate(PackagingStrategy $strategy, array $packages) {
-    $package_aggregate = new Package();
-    $package_aggregate->setWeightUnits($strategy->getDefaultWeightUnits());
+  function getPackageAggregate(PackagingContext $context, array $packages) {
+    $package_aggregate = new PackagingPackage();
+    $package_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     foreach ($packages as $package) {
       $package_aggregate->setWeight($package_aggregate->getWeight() + $package->getWeight());
       $package_aggregate->setShipWeight($package_aggregate->getShipWeight() + $package->getShipWeight());
       $package_aggregate->setQuantity($package_aggregate->getQuantity() + $package->getQuantity());
     }
-    $this->pass(t('Total package weight = %total %units.', array('%total' => $package_aggregate->getWeight(), '%units' => $strategy->getDefaultWeightUnits())));
-    $this->pass(t('Total package weight after weight markup = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $strategy->getDefaultWeightUnits())));
-    $this->pass(t('Total ship weight of packages = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $strategy->getDefaultWeightUnits())));
+    $this->pass(t('Total package weight = %total %units.', array('%total' => $package_aggregate->getWeight(), '%units' => $context->getDefaultWeightUnits())));
+    $this->pass(t('Total package weight after weight markup = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $context->getDefaultWeightUnits())));
+    $this->pass(t('Total ship weight of packages = %total %units.', array('%total' => $package_aggregate->getShipWeight(), '%units' => $context->getDefaultWeightUnits())));
 
     return $package_aggregate;
   }
@@ -449,7 +457,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $products = array();
     $number = mt_rand(5, 10);
     for ($i = 0; $i < $number; $i++) {
-      $products[] = Product::constructFromUbercartProduct($this->createProduct());
+      $products[] = PackagingProduct::constructFromUbercartProduct($this->createProduct());
     }
     return $products;
   }

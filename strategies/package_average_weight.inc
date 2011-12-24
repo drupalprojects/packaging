@@ -26,25 +26,25 @@ class PackageAverageWeight extends PackagingStrategy {
   /**
    * Implements PackagingStrategy::packageProducts().
    */
-  public function packageProducts(array $products) {
+  public function packageProducts(PackagingContext $context, array $products) {
 
     // Create product aggregate for averaging.
-    $product_aggregate = new Product();
+    $product_aggregate = new PackagingProduct();
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the store
       // weight units.
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
       $product_aggregate->setPrice($product_aggregate->getPrice() + $product->getPrice());
-      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $this->getDefaultWeightUnits()));
+      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
     }
 
     // Calculate the number of packages we will need.
-    if ($this->getMaximumPackageWeight() == PackagingStrategy::UNLIMITED_PACKAGE_WEIGHT) {
+    if ($context->getMaximumPackageWeight() == PackagingContext::UNLIMITED_PACKAGE_WEIGHT) {
       $num_packages = 1;
     }
     else {
-      $num_packages = ceil($product_aggregate->getWeight() / $this->getMaximumPackageWeight());
+      $num_packages = ceil($product_aggregate->getWeight() / $context->getMaximumPackageWeight());
     }
 
     $average_quantity = $product_aggregate->getQuantity() / $num_packages;
@@ -54,13 +54,13 @@ class PackageAverageWeight extends PackagingStrategy {
     $packages = array();
     for ($i = 0; $i < $num_packages; $i++) {
       // Create package.
-      $package = new Package();
+      $package = new PackagingPackage();
 
       // Set package values to the average values.
       $package->setQuantity($average_quantity);
       $package->setPrice($average_price);
       $package->setWeight($average_weight);
-      $package->setWeightUnits($this->getDefaultWeightUnits());
+      $package->setWeightUnits($context->getDefaultWeightUnits());
 
       // Markup weight of package.
       $package->setShipWeight(packaging_weight_markup($package->getWeight()));

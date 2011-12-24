@@ -7,7 +7,7 @@
 /**
  * Represents a physical product that may be put into packages.
  */
-class Product {
+class PackagingProduct {
 
   protected $origin;
   protected $destination;
@@ -27,18 +27,19 @@ class Product {
 
 
   /**
-   * Constructs a new Product object given a Drupal Commerce Product entity.
+   * Constructs a new PackagingProduct object given a Drupal Commerce Product
+   * entity.
    */
   public static function constructFromCommerceProduct($product) {
 
-    $contruct = new Product();
+    $contruct = new PackagingProduct();
 
     return $contruct;
   }
 
   /**
-   * Constructs a new Product object given an array of Drupal Commerce Product
-   * entities.
+   * Constructs a new PackagingProduct object given an array of Drupal Commerce
+   * Product entities.
    */
   public static function constructFromCommerceProductMultiple(array $products) {
     $constructs = array();
@@ -52,12 +53,12 @@ class Product {
 
 
   /**
-   * Constructs a new Product object given an Ubercart Product object.
+   * Constructs a new PackagingProduct object given an Ubercart Product object.
    */
   public static function constructFromUbercartProduct($product) {
 
     // New instance.
-    $contruct = new Product();
+    $contruct = new PackagingProduct();
 
     // Copy properties into this instance.
     $contruct->quantity     = $product->qty;

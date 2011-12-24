@@ -21,12 +21,12 @@ class PackageCustomStrategy extends PackagingStrategy {
   /**
    * Implements PackagingStrategy::packageProducts().
    */
-  public function packageProducts(array $products) {
+  public function packageProducts(PackagingContext $context, array $products) {
     $package = array();
 
     // Creates twenty-three packages, independent of number of products.
     for ($i = 0; $i < 23; $i++) {
-      $package = new Package();
+      $package = new PackagingPackage();
 
       // Save the package to the array and exit.
       $packages[] = $package;

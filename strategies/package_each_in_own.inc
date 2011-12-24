@@ -37,7 +37,7 @@ Products are added to packages one-by-one, in the order they are passed to the s
   /**
    * Implements PackagingStrategy::packageProducts().
    */
-  public function packageProducts(array $products) {
+  public function packageProducts(PackagingContext $context, array $products) {
     // Each product line item in its own package, subject only to pkg_qty.
 
     // Loop over products.
@@ -50,18 +50,18 @@ Products are added to packages one-by-one, in the order they are passed to the s
       // Calculate number of full packages.
       $num_of_pkgs = (int) ($product->getQuantity() / $product->getPackageQuantity());
       // Calculate product weight in default units.
-      $item_weight = $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $this->getDefaultWeightUnits());
+      $item_weight = $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits());
 
       if ($num_of_pkgs) {
         // These are full packages.
         for ($i = 0; $i < $num_of_pkgs; $i++) {
           // Create full packages.
-          $package = new Package();
+          $package = new PackagingPackage();
           $product_quantity = $product->getPackageQuantity();
           $package->setQuantity($product_quantity);
           $package->setPrice($product->getPrice() * $product_quantity);
           $package->setWeight($item_weight * $product_quantity);
-          $package->setWeightUnits($this->getDefaultWeightUnits());
+          $package->setWeightUnits($context->getDefaultWeightUnits());
 
           // Markup weight on a per-package basis.
           $package->setShipWeight(packaging_weight_markup($package->getWeight()));
@@ -75,11 +75,11 @@ Products are added to packages one-by-one, in the order they are passed to the s
       $remaining_qty = $product->getQuantity() % $product->getPackageQuantity();
       if ($remaining_qty) {
         // Create partially-full packages.
-        $package = new Package();
+        $package = new PackagingPackage();
         $package->setQuantity($remaining_qty);
         $package->setPrice($product->getPrice() * $remaining_qty);
         $package->setWeight($item_weight * $remaining_qty);
-        $package->setWeightUnits($this->getDefaultWeightUnits());
+        $package->setWeightUnits($context->getDefaultWeightUnits());
 
         // Markup weight on a per-package basis.
         $package->setShipWeight(packaging_weight_markup($package->getWeight()));

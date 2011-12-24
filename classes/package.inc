@@ -13,7 +13,7 @@
  *   - weight_units: Set to store default, taken from uc_weight_unit variable.
  *   - shipweight:   Computed weight of package, including markup.
  */
-class Package {
+class PackagingPackage {
 
   protected $quantity     = 0;
   protected $price        = 0.0;
