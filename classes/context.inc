@@ -45,14 +45,14 @@ class PackagingContext {
 
 
   /**
-   * Mutator for maximum_weight property.
+   * Mutator for strategy property.
    */
   public function setStrategy(PackagingStrategy $strategy) {
     $this->strategy = $strategy;
   }
 
   /**
-   * Accessor for maximum_weight property.
+   * Accessor for strategy property.
    */
   public function getStrategy() {
     return $this->strategy;

@@ -14,11 +14,12 @@ define('PACKAGE_WEIGHT_LIMIT_LBS', 150.0);  // 150lbs
 /**
  * Packages products into boxes.
  *
- * Packages products into boxes subject to the FedEx weight limit, corrected
- * for any weight markup imposed by the administrator. All products are
- * assumed to have the same origin address and destination address. If you want
- * to package shipments that have multiple origin or destination addresses you
- * must divide up the products first, then call this function multiple times.
+ * Packages products into boxes subject to a shipping method weight limit,
+ * corrected for any weight markup imposed by the administrator. All products
+ * are assumed to have the same origin address and destination address. If you
+ * want to package shipments that have multiple origin or destination addresses
+ * you must divide up the products first, then call this function multiple
+ * times.
  *
  * $package object returned from this routine contains the following members:
  *   - quantity:     Number of items in package.
@@ -82,7 +83,7 @@ function packaging_package_products($products) {
 }
 
 /**
- * Modify the weight of shipment before sending to FedEx for a quote.
+ * Modifies the weight of a package to account for packaging material.
  *
  * @param $weight
  *   Shipping weight without any weight markup.
@@ -126,7 +127,6 @@ function packaging_menu() {
     'file'             => 'packaging.admin.inc',
   );
 
-
   $items['packaging'] = array(
     'title' => 'Store',
     'description' => 'Administer',
@@ -154,7 +154,6 @@ function packaging_ctools_plugin_type() {
     'strategy' => array(
       // If FALSE, will ignore hook_MODULE_PLUGIN() and generate automatic hook.
       'use hooks' => TRUE,
-
     ),
   );
 }
@@ -174,46 +173,39 @@ function packaging_ctools_plugin_directory($module, $plugin) {
 function packaging_packaging_strategy() {
   return array(
     'allinone' => array(
-      'label' => t('All-in-one'),
+      'title' => t('All-in-one'),
       'handler' => array(
         'class' => 'PackageAllInOne',
-        //'class' => 'package_all_in_one',
       ),
-    //  'path' => drupal_get_path('module', 'packaging') . '/strategies',
     ),
     'eachinown' => array(
-      'label' => t('Each in own'),
+      'title' => t('Each in own'),
       'handler' => array(
         'class' => 'PackageEachInOwn',
-        //'class' => 'package_each_in_own',
       ),
     ),
     'byvolume' => array(
-      'label' => t('By volume'),
+      'title' => t('By volume'),
       'handler' => array(
         'class' => 'PackageByVolume',
-        //'class' => 'package_by_volume',
       ),
     ),
     'onepackage' => array(
-      'label' => t('One package'),
+      'title' => t('One package'),
       'handler' => array(
         'class' => 'PackageOnePackage',
-        //'class' => 'package_one_package',
       ),
     ),
     'averageweight' => array(
-      'label' => t('Average weight'),
+      'title' => t('Average weight'),
       'handler' => array(
         'class' => 'PackageAverageWeight',
-        //'class' => 'package_average_weight',
       ),
     ),
     'averagevolume' => array(
-      'label' => t('Average volume'),
+      'title' => t('Average volume'),
       'handler' => array(
         'class' => 'PackageAverageVolume',
-        //'class' => 'package_average_volume',
       ),
     ),
   );
@@ -245,6 +237,7 @@ function packaging_get_strategies() {
   ctools_include('plugins');
   return ctools_get_plugins('packaging', 'strategy');
 }
+
 /**
  * Instantiates a packaging strategy class.
  *

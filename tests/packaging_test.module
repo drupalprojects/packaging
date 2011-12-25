@@ -21,7 +21,7 @@ function packaging_test_ctools_plugin_directory($module, $plugin) {
 function packaging_test_packaging_strategy() {
   return array(
     'custom' => array(
-      'label' => t('Custom'),
+      'title' => t('Custom'),
       'handler' => array(
         'class' => 'PackageCustomStrategy',
       ),

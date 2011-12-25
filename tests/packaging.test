@@ -347,7 +347,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Test plugin system to see that any custom plugin gets picked up.
     // PackageCustomStrategy is defined by the packaging_test module.
-    //$strategy = packaging_get_instance('custom');
+    $strategy = packaging_get_instance('custom');
 
     // Test to see if it was found!
 
@@ -355,7 +355,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
-    $context->setStrategy(new PackageCustomStrategy());
+    $context->setStrategy($strategy);
 
     $packages = $context->packageProducts($this->products);
 

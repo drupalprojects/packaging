@@ -46,10 +46,47 @@
  */
 function packaging_admin_settings($form, &$form_state) {
 
+  $form['max_weight'] = array(
+    '#type'        => 'textfield',
+    '#title'       => t('Maximum package weight'),
+    '#description' => t('Enter the maximum allowed package weight.'),
+  );
+
+  $form['weight_units'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Package weight units'),
+    '#description' => t('Select the default weight units to use for packages.'),
+    '#options'     => array(
+      'lb' => t('Pounds'),
+      'oz' => t('Ounces'),
+      'kg' => t('Kilograms'),
+      'g'  => t('Grams'),
+    ),
+  );
+
+  $form['max_volume'] = array(
+    '#type'        => 'textfield',
+    '#title'       => t('Maximum package volume'),
+    '#description' => t('Enter the maximum allowed package volume.'),
+  );
+
+  $form['length_units'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Package length units'),
+    '#description' => t('Select the default length units to use for packages.'),
+    '#options'     => array(
+      'in' => t('Inches'),
+      'ft' => t('Feet'),
+      'cm' => t('Centimeters'),
+      'mm' => t('Millimeters'),
+    ),
+  );
+
+
   $operations = packaging_get_strategies();
   $options = array();
   foreach ($operations as $id => $operation) {
-    $options[$id] = $operation['label'];
+    $options[$id] = $operation['title'];
   }
 
   // Form to select packaging strategy.
@@ -134,7 +171,7 @@ function print_info() {
   $operations = packaging_get_strategies();
   $options = array();
   foreach ($operations as $id => $operation) {
-    $options[$id] = $operation['label'];
+    $options[$id] = $operation['title'];
   }
 
   $form['strategy'] = array(
