@@ -133,7 +133,7 @@ function packaging_admin_settings($form, &$form_state) {
   }
 
   if ($instance = packaging_get_instance($strategy)) {
-    $description = $instance->getDescription(); 
+    $description = $instance->getDescription();
   }
   else {
     $description = t('No description available');
@@ -166,7 +166,7 @@ function packaging_strategy_select_callback($form, $form_state) {
 function packaging_admin_settings_submit($form, &$form_state) {
   $operation = $form_state['values']['packaging_strategy'];
   if ($instance = packaging_get_instance($operation)) {
-    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) ."</pre>");
+    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
   }
 }
 
@@ -208,6 +208,6 @@ function print_info() {
 function print_info_submit($form, &$form_state) {
   $operation = $form_state['values']['strategy'];
   if ($instance = packaging_get_instance($operation)) {
-    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) ."</pre>");
+    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
   }
 }

@@ -81,7 +81,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Test effect of package quantity
 
-    // Test effect of weight markup 
+    // Test effect of weight markup
   }
 
   /**
@@ -228,7 +228,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Test effect of package quantity
 
-    // Test effect of weight markup 
+    // Test effect of weight markup
   }
 
   /**
@@ -482,7 +482,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
       'length_units' => array_rand(array_flip($length_units)),
       'pkg_qty' => mt_rand(1, 10),
       'default_qty' => 1,
-      'qty' => mt_rand(1,5),
+      'qty' => mt_rand(1, 5),
       'ordering' => mt_rand(-25, 25),
       'shippable' => TRUE,
     );
