@@ -403,7 +403,6 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
    */
   function loadIncludes() {
     drupal_load('module', 'packaging');
-    drupal_load('module', 'uc_store');
     module_load_include('inc', 'packaging', 'classes/package');
     module_load_include('inc', 'packaging', 'classes/product');
     module_load_include('inc', 'packaging', 'classes/context');
@@ -424,7 +423,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $product_aggregate = new PackagingProduct();
     $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     foreach ($this->products as $product) {
-      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
     }
     $this->pass(t('Total weight of products = %total %units.', array('%total' => $product_aggregate->getWeight(), '%units' => $context->getDefaultWeightUnits())));

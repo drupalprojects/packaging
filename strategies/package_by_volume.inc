@@ -57,7 +57,7 @@ This strategy will always return the same results if given the same set of produ
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the store
       // weight units.
-      $product->setWeight($product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product->setWeight($product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
       $product->setWeightUnits($context->getDefaultWeightUnits());
     }
 

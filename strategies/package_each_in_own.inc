@@ -50,7 +50,7 @@ Products are added to packages one-by-one, in the order they are passed to the s
       // Calculate number of full packages.
       $num_of_pkgs = (int) ($product->getQuantity() / $product->getPackageQuantity());
       // Calculate product weight in default units.
-      $item_weight = $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits());
+      $item_weight = $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits());
 
       if ($num_of_pkgs) {
         // These are full packages.

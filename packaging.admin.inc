@@ -46,13 +46,16 @@
  */
 function packaging_admin_settings($form, &$form_state) {
 
-  $form['max_weight'] = array(
+  // Sets maximum allowed package weight.
+  $form['packaging_max_weight'] = array(
     '#type'        => 'textfield',
     '#title'       => t('Maximum package weight'),
     '#description' => t('Enter the maximum allowed package weight.'),
   );
 
-  $form['weight_units'] = array(
+  // Defines units for maximum weight, also used as the default weight units
+  // for PackagingPackage objects.
+  $form['packaging_weight_units'] = array(
     '#type'        => 'select',
     '#title'       => t('Package weight units'),
     '#description' => t('Select the default weight units to use for packages.'),
@@ -64,13 +67,16 @@ function packaging_admin_settings($form, &$form_state) {
     ),
   );
 
-  $form['max_volume'] = array(
+  // Sets maximum allowed package volume.
+  $form['packaging_max_volume'] = array(
     '#type'        => 'textfield',
     '#title'       => t('Maximum package volume'),
     '#description' => t('Enter the maximum allowed package volume.'),
   );
 
-  $form['length_units'] = array(
+  // Defines units for length, cubed for maximum volume. Also used as the
+  // default length units for PackagingPackage objects.
+  $form['packaging_length_units'] = array(
     '#type'        => 'select',
     '#title'       => t('Package length units'),
     '#description' => t('Select the default length units to use for packages.'),
@@ -83,6 +89,7 @@ function packaging_admin_settings($form, &$form_state) {
   );
 
 
+  // Use CTools to look for any modules which define packaging strategies.
   $operations = packaging_get_strategies();
   $options = array();
   foreach ($operations as $id => $operation) {
@@ -93,9 +100,9 @@ function packaging_admin_settings($form, &$form_state) {
   $form['packaging_strategy'] = array(
     '#type'          => 'select',
     '#title'         => t('Packaging strategy'),
-    //'#default_value' => variable_get('packaging_strategy', 1),
-    '#options'       => $options,
     '#description'   => t('Select the packaging strategy that is most appropriate to the types of products you sell.'),
+    '#options'       => $options,
+    //'#default_value' => variable_get('packaging_strategy', 1),
     '#ajax' => array(
       'wrapper' => 'packaging-strategy-description-fieldset-wrapper',
       'callback' => 'packaging_strategy_select_callback',
@@ -164,7 +171,8 @@ function packaging_admin_settings_submit($form, &$form_state) {
 }
 
 /**
- * Menu callback.
+ * Menu callback for /packaging path. This is used only for testing during
+ * development, and will be removed before a release.
  */
 function print_info() {
 
@@ -194,7 +202,8 @@ function print_info() {
 }
 
 /**
- * Submit handler.
+ * Submit handler for /packaging path. This is used only for testing during
+ * development, and will be removed before a release.
  */
 function print_info_submit($form, &$form_state) {
   $operation = $form_state['values']['strategy'];

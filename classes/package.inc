@@ -10,7 +10,7 @@
  *   - quantity:     Number of items in package.
  *   - price:        Value (sales price, in store currency) of items in package.
  *   - weight:       Actual weight of items in package, in store weight units.
- *   - weight_units: Set to store default, taken from uc_weight_unit variable.
+ *   - weight_units: Taken from packaging_weight_units variable. (?)
  *   - shipweight:   Computed weight of package, including markup.
  */
 class PackagingPackage {

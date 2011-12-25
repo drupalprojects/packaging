@@ -36,7 +36,7 @@ class PackageAverageWeight extends PackagingStrategy {
       // weight units.
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
       $product_aggregate->setPrice($product_aggregate->getPrice() + $product->getPrice());
-      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * uc_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
     }
 
     // Calculate the number of packages we will need.

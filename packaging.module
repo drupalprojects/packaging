@@ -10,6 +10,84 @@
 /** Maximum shipping weight for FedEx (non-Freight services) */
 define('PACKAGE_WEIGHT_LIMIT_LBS', 150.0);  // 150lbs
 
+/******************************************************************************
+ * Unit conversion constants. Used by the unit conversion functions
+ * packaging_weight_conversion() and packaging_length_conversion().
+ ******************************************************************************/
+
+/** Converts kilograms to kilograms. */
+define('PACKAGING_KG_TO_KG', 1);
+/** Converts kilograms to grams. */
+define('PACKAGING_KG_TO_G',  1000);
+/** Converts kilograms to pounds. */
+define('PACKAGING_KG_TO_LB', 2.204622621849);
+/** Converts kilograms to ounces. */
+define('PACKAGING_KG_TO_OZ', 35.27396194958);
+
+/** Converts grams to grams. */
+define('PACKAGING_G_TO_G',   1);
+/** Converts grams to kilograms. */
+define('PACKAGING_G_TO_KG',  0.001);
+/** Converts grams to pounds. */
+define('PACKAGING_G_TO_LB',  0.002204622622);
+/** Converts grams to ounces. */
+define('PACKAGING_G_TO_OZ',  0.03527396195);
+
+/** Converts pounds to pounds. */
+define('PACKAGING_LB_TO_LB', 1);
+/** Converts pounds to ounces. */
+define('PACKAGING_LB_TO_OZ', 16);
+/** Converts pounds to kilograms. */
+define('PACKAGING_LB_TO_KG', 0.45359237);
+/** Converts pounds to grams. */
+define('PACKAGING_LB_TO_G',  453.59237);
+
+/** Converts ounces to ounces. */
+define('PACKAGING_OZ_TO_OZ', 1);
+/** Converts ounces to pounds. */
+define('PACKAGING_OZ_TO_LB', 0.0625);
+/** Converts ounces to kilograms. */
+define('PACKAGING_OZ_TO_KG', 0.028349523);
+/** Converts ounces to grams. */
+define('PACKAGING_OZ_TO_G',  28.349523125);
+
+/** Converts inches to inches. */
+define('PACKAGING_IN_TO_IN', 1);
+/** Converts inches to feet. */
+define('PACKAGING_IN_TO_FT', 0.083333333333);
+/** Converts inches to centimeters. */
+define('PACKAGING_IN_TO_CM', 2.54);
+/** Converts inches to millimeters. */
+define('PACKAGING_IN_TO_MM', 25.4);
+
+/** Converts feet to feet. */
+define('PACKAGING_FT_TO_FT', 1);
+/** Converts feet to inches. */
+define('PACKAGING_FT_TO_IN', 12);
+/** Converts feet to centimeters. */
+define('PACKAGING_FT_TO_CM', 30.48);
+/** Converts feet to millimeters. */
+define('PACKAGING_FT_TO_MM', 304.8);
+
+/** Converts centimeters to centimeters. */
+define('PACKAGING_CM_TO_CM', 1);
+/** Converts centimeters to inches. */
+define('PACKAGING_CM_TO_IN', 0.393700787402);
+/** Converts centimeters to feet. */
+define('PACKAGING_CM_TO_FT', 0.03280839895);
+/** Converts centimeters to millimeters. */
+define('PACKAGING_CM_TO_MM', 10);
+
+/** Converts millimeters to millimeters. */
+define('PACKAGING_MM_TO_MM', 1);
+/** Converts millimeters to inches. */
+define('PACKAGING_MM_TO_IN', 0.03937007874);
+/** Converts millimeters to feet. */
+define('PACKAGING_MM_TO_FT', 0.003280839895);
+/** Converts millimeters to centimeters. */
+define('PACKAGING_MM_TO_CM', 0.1);
+
+
 
 /**
  * Packages products into boxes.
@@ -25,7 +103,7 @@ define('PACKAGE_WEIGHT_LIMIT_LBS', 150.0);  // 150lbs
  *   - quantity:     Number of items in package.
  *   - price:        Value (sales price, in store currency) of items in package.
  *   - weight:       Actual weight of items in package, in store weight units.
- *   - weight_units: Set to store default, taken from uc_weight_unit variable.
+ *   - weight_units: Set to store default. Taken from packaging_weight_units variable.
  *   - shipweight:   Computed weight of package, including markup.
  *
  * Store weight units are used internally for computation of package weights.
@@ -61,10 +139,10 @@ function packaging_package_products($products) {
   // Convert $products_max_weight (which is defined in LB units) into store
   // default weight units so we can perform all calculations and return all
   // results in store default weight units.
-  $products_max_weight = $products_max_weight * uc_weight_conversion('LB', variable_get('uc_weight_unit', 'LB'));
+  $products_max_weight = $products_max_weight * packaging_weight_conversion('LB', variable_get('packaging_weight_units', 'LB'));
 
-  // Externals needed in Strategy
-  // uc_weight_conversion()
+  // Externals needed in PackagingStrategy:
+  // packaging_weight_conversion()
 
   //if (variable_get('uc_fedex_all_in_one', TRUE)) {
     $strategy = new PackageAllInOne();
@@ -264,4 +342,36 @@ function packaging_get_instance($id) {
   }
 
   return $instances[$id];
+}
+
+/**
+ * Gets the conversion ratio from one unit of weight to another.
+ */
+function packaging_weight_conversion($from_units, $to_units = NULL) {
+  if (is_null($to_units)) {
+    $to_units = variable_get('packaging_weight_units', 'lb');
+  }
+  $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
+  if (defined($constant) && ($conversion = constant($constant)) > 0) {
+    return $conversion;
+  }
+  else {
+    return 1;
+  }
+}
+
+/**
+ * Gets the conversion ratio from one unit of length to another.
+ */
+function packaging_length_conversion($from_units, $to_units = NULL) {
+  if (is_null($to_units)) {
+    $to_units = variable_get('packaging_length_units', 'in');
+  }
+  $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
+  if (defined($constant) && ($conversion = constant($constant)) > 0) {
+    return $conversion;
+  }
+  else {
+    return 1;
+  }
 }
