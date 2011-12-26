@@ -1,0 +1,28 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the packaging module.
+ *
+ * @author Tim Rohaly.    <http://drupal.org/user/202830>
+ */
+
+
+/**
+ * Implements hook_uninstall().
+ *
+ * Removes all variables and other data inserted into the database
+ * by this module.
+ */
+function packaging_uninstall() {
+
+  // Remove all module variables from the database
+  variable_del('packaging_max_weight');
+  variable_del('packaging_weight_units');
+  variable_del('packaging_max_volume');
+  variable_del('packaging_length_units');
+
+  variable_del('packaging_strategy');
+  variable_del('strategy');
+  variable_del('operations');
+}
