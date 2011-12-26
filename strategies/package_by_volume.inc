@@ -54,6 +54,17 @@ This strategy will always return the same results if given the same set of produ
 
     // Loop over products.
     foreach ($products as $product) {
+      // Get item dimensions. Length units are set on a per-product basis, so
+      // we convert as necessary in order to perform all calculations in the
+      // default length units.
+      $dimensions = $product->getDimensions();
+      foreach ($dimensions as &$dimension) {
+        $dimension *= packaging_length_conversion($product->getLengthUnits(), $context->getDefaultLengthUnits());
+      }
+      // Do this before we set dimensions!!
+      // setDimensions() should rescale all dimensions automatically.
+      $product->setLengthUnits($context->getDefaultLengthUnits());
+      $product->setDimensions($dimensions);
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the store
       // weight units.
@@ -63,46 +74,49 @@ This strategy will always return the same results if given the same set of produ
 
     // Sort products from heaviest to lightest to make packaging deterministic.
     // Products have to all have the same weight units for a valid comparison!
-    usort($products, 'PackageByVolume::compareWeights');
+    usort($products, 'PackageByVolume::compareVolumes');
 
     // Create first package.
     $packages = array();
     $package  = new PackagingPackage();
     $package->setWeightUnits($context->getDefaultWeightUnits());
+    $package->setLengthUnits($context->getDefaultLengthUnits());
 
     // Loop over products.
     foreach ($products as $product) {
-      // Get product weight.
-      $product_weight = $product->getWeight();
+      // Get product volume.
+      $product_volume = $product->getVolume();
 
-      if ($context->exceedsMaximumPackageWeight($product_weight)) {
-        // This product is too heavy to ship - quit with error.
+      if ($context->exceedsMaximumPackageVolume($product_volume)) {
+        // This product is too large to ship - quit with error.
         return array();
       }
 
       // Loop over quantity of each product.
       for ($item = 0; $item < $product->getQuantity(); $item++) {
         // Test to see if putting this item into the current package will put
-        // us over the package weight limit.
-        if ($context->lessThanMaximumPackageWeight($package->getWeight() + $product_weight)) {
+        // us over the package volume limit.
+        if ($context->lessThanMaximumPackageVolume($package->getVolume() + $product_volume)) {
           // No?  Then update the package information and continue.
           $package->setQuantity($package->getQuantity() + 1);
           $package->setPrice($package->getPrice() + $product->getPrice());
-          $package->setWeight($package->getWeight() + $product_weight);
+          $package->setWeight($package->getWeight() + $product->getWeight());
+          $package->setVolume($package->getVolume() + $product_volume);
         }
         else {
-          // If weight >= maximum allowed weight, try to fit this item into one
+          // If volume >= maximum allowed volume, try to fit this item into one
           // of the previously-filled packages. If this item is small it might
           // fit into the available space rather than needing a new package.
           $found_space = FALSE;
           foreach ($packages as &$filled_package) {
             // Will it fit?
-            if ($context->lessThanMaximumPackageWeight($filled_package->getWeight() + $product_weight)) {
+            if ($context->lessThanMaximumPackageVolume($filled_package->getVolume() + $product_volume)) {
               // Yes, update values for previously-filled package.
               $found_space = TRUE;
               $filled_package->setQuantity($filled_package->getQuantity() + 1);
               $filled_package->setPrice($filled_package->getPrice() + $product->getPrice());
-              $filled_package->setWeight($filled_package->getWeight() + $product_weight);
+              $filled_package->setWeight($filled_package->getWeight() + $product->getWeight());
+              $filled_package->setVolume($filled_package->getVolume() + $product_volume);
               // Because we've added a product, we need to adjust the weight
               // markup weight of this previously-filled package.
               $filled_package->setShipWeight(packaging_weight_markup($filled_package->getWeight()));
@@ -125,8 +139,10 @@ This strategy will always return the same results if given the same set of produ
             $package = new PackagingPackage();
             $package->setQuantity(1);
             $package->setPrice($product->getPrice());
-            $package->setWeight($product_weight);
+            $package->setWeight($product->getWeight());
             $package->setWeightUnits($context->getDefaultWeightUnits());
+            $package->setVolume($product_volume);
+            $package->setLengthUnits($context->getDefaultLengthUnits());
           }
         }
       }
@@ -134,7 +150,6 @@ This strategy will always return the same results if given the same set of produ
 
     // No more products left to package.
     // Take care of the partially-filled package we were working on.
-
     // First, markup weight of partially-filled package.
     $package->setShipWeight(packaging_weight_markup($package->getWeight()));
 
@@ -147,9 +162,9 @@ This strategy will always return the same results if given the same set of produ
   /**
    * Sort callback. Sorts array of PackagingProduct objects by weight from high to low.
    */
-  protected static function compareWeights(PackagingProduct $a, PackagingProduct $b) {
-    $weight_a = $a->getWeight();
-    $weight_b = $b->getWeight();
+  protected static function compareVolumes(PackagingProduct $a, PackagingProduct $b) {
+    $weight_a = $a->getVolume();
+    $weight_b = $b->getVolume();
 
     if ($a == $b) {
       return 0;

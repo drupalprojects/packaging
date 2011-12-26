@@ -129,4 +129,68 @@ class PackagingContext {
   public function setWeightMarkupFunction($weight_markup_function) {
     $this->weight_markup_function = $weight_markup_function;
   }
+
+  /**
+   * Mutator for maximum_volume property.
+   */
+  public function setMaximumPackageVolume($maximum_volume = self::UNLIMITED_PACKAGE_VOLUME) {
+    $this->maximum_volume = $maximum_volume;
+  }
+
+  /**
+   * Accessor for maximum_volume property.
+   */
+  public function getMaximumPackageVolume() {
+    return $this->maximum_volume;
+  }
+
+  /**
+   * Compares volume against maximum allowed volume.
+   *
+   * @param $volume
+   *   Float containing volume in default length units.
+   *
+   * @return
+   *   TRUE if $volume exceeds maximum allowed volume, FALSE otherwise.
+   */
+  public function exceedsMaximumPackageVolume($volume) {
+    if ($this->maximum_volume != self::UNLIMITED_PACKAGE_VOLUME &&
+        $volume > $this->maximum_volume) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Compares volume against maximum allowed volume.
+   *
+   * @param $volume
+   *   Float containing volume in default length units.
+   *
+   * @return
+   *   TRUE if $volume is less than the maximum allowed volume, FALSE otherwise.
+   */
+  public function lessThanMaximumPackageVolume($volume) {
+    if ($this->maximum_volume == self::UNLIMITED_PACKAGE_VOLUME ||
+        $volume < $this->maximum_volume) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+
+  /**
+   * Accessor for length_units property.
+   */
+  public function setDefaultLengthUnits($length_units = 'LB') {
+    $this->length_units = $length_units;
+    // @todo: Need to modify $maximum_volume to agree with the new units.
+  }
+
+  /**
+   * Accessor for length_units property.
+   */
+  public function getDefaultLengthUnits() {
+    return $this->length_units;
+  }
+
 }

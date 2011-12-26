@@ -73,6 +73,15 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     // Actual number of boxes.
     $actual_number_of_packages = count($packages);
 
+    // Calculate minimum possible number of boxes.
+    $minimum_number_of_packages = ceil($product_aggregate->getWeight() / $context->getMaximumPackageWeight());
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages >= $minimum_number_of_packages),
+      t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
+    );
+
     // Test different origin addresses
 
     // Test different destination addresses
@@ -187,10 +196,11 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
    * a new package is created.
    */
   function testPackageByVolume() {
-    $this->pass(t('Testing PackageAllInOne strategy'));
+    $this->pass(t('Testing PackageByVolume strategy'));
 
     $context = new PackagingContext();
-    $context->setMaximumPackageWeight(15);
+    $context->setMaximumPackageVolume(50);
+    $context->setDefaultLengthUnits('IN');
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
     $context->setStrategy(new PackageByVolume());
@@ -219,6 +229,15 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Actual number of boxes.
     $actual_number_of_packages = count($packages);
+
+    // Calculate minimum possible number of boxes.
+    $minimum_number_of_packages = ceil($product_aggregate->getVolume() / $context->getMaximumPackageVolume());
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages >= $minimum_number_of_packages),
+      t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
+    );
 
     // Test different origin addresses
 
@@ -301,42 +320,6 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     //  ($actual_number_of_packages == $expected_number_of_packages),
     //  t('Number of packages equals expectation.')
     //);
-  }
-
-  /**
-   * Test package by volume strategy.
-   */
-  function junktestPackageByVolume() {
-    $this->pass(t('Testing PackageByVolume strategy'));
-
-    $context = new PackagingContext();
-    $context->setMaximumPackageWeight(15);
-    $context->setDefaultWeightUnits('LB');
-    $context->setWeightMarkupFunction('packaging_weight_markup');
-    $context->setStrategy(new PackageByVolume());
-
-    $packages = $context->packageProducts($this->products);
-
-    //debug($packages);
-
-    // Product aggregates.
-    $product_aggregate = $this->getProductAggregate($context, $this->products);
-
-    // Package aggregates.
-    $package_aggregate = $this->getPackageAggregate($context, $packages);
-
-    // Test to see if the strategy produced the expected total weight.
-    $this->assertTrue(
-      abs($package_aggregate->getWeight() - $product_aggregate->getWeight()) < 0.0001,
-      t('Total weight of packages equals total weight of products.')
-    );
-
-    // Test to see if the strategy produced the expected weight markup.
-    $this->assertTrue(
-      abs($package_aggregate->getShipWeight() - packaging_weight_markup($product_aggregate->getWeight())) < 0.0001,
-      t('Ship weight of packages equals total weight of products with markup.')
-    );
-
   }
 
   /**
@@ -471,7 +454,10 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function createProduct($product = array()) {
     // Set the default required fields.
     $weight_units = array('lb', 'kg', 'oz', 'g');
-    $length_units = array('in', 'ft', 'cm', 'mm');
+    // Feet are too big!  Need to re-do this so volumes aren't
+    // ridiculous if ft are chosen. Until then, comment it out.
+    //$length_units = array('in', 'ft', 'cm', 'mm');
+    $length_units = array('in', 'cm', 'mm');
     $product += array(
       'type' => 'product',
       'model' => $this->randomName(8),
@@ -480,9 +466,9 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
       'sell_price' => mt_rand(1, 9999),
       'weight' => mt_rand(1, 5),
       'weight_units' => array_rand(array_flip($weight_units)),
-      'length' => mt_rand(1, 9999),
-      'width' => mt_rand(1, 9999),
-      'height' => mt_rand(1, 9999),
+      'length' => mt_rand(1, 4),
+      'width' => mt_rand(1, 4),
+      'height' => mt_rand(1, 4),
       'length_units' => array_rand(array_flip($length_units)),
       'pkg_qty' => mt_rand(1, 10),
       'default_qty' => 1,

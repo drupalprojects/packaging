@@ -19,6 +19,8 @@ class PackagingPackage {
   protected $price        = 0.0;
   protected $weight       = 0.0;
   protected $weight_units = 'LB';
+  protected $volume       = 0.0;
+  protected $length_units = 'IN';
   protected $shipweight   = 0.0;
 
 
@@ -72,7 +74,7 @@ class PackagingPackage {
   }
 
   /**
-   * Mutator for weight property.
+   * Mutator for weight_units property.
    */
   public function setWeightUnits($weight_units) {
     $this->weight_units = $weight_units;
@@ -86,10 +88,38 @@ class PackagingPackage {
   }
 
   /**
-   * Mutator for weight property.
+   * Mutator for shipweight property.
    */
   public function setShipWeight($shipweight) {
     $this->shipweight = $shipweight;
+  }
+
+  /**
+   * Accessor for volume property.
+   */
+  public function getVolume() {
+    return $this->volume;
+  }
+
+  /**
+   * Mutator for volume property.
+   */
+  public function setVolume($volume) {
+    $this->volume = $volume;
+  }
+
+  /**
+   * Accessor for length_units property.
+   */
+  public function getLengthUnits() {
+    return $this->length_units;
+  }
+
+  /**
+   * Mutator for length_units property.
+   */
+  public function setLengthUnits($length_units) {
+    $this->length_units = $length_units;
   }
 
 }
