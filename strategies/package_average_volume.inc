@@ -30,26 +30,41 @@ class PackageAverageVolume extends PackagingStrategy {
 
     // Create product aggregate for averaging.
     $product_aggregate = new PackagingProduct();
+    $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
+    $product_aggregate->setLengthUnits($context->getDefaultLengthUnits());
+
     foreach ($products as $product) {
-      // Get item weight. Weight units are set on a per-product basis, so we
-      // convert as necessary in order to perform all calculations in the store
-      // weight units.
+      // Get item dimensions. Length units are set on a per-product basis, so
+      // we convert as necessary in order to perform all calculations in the
+      // default length units.
+      $dimensions = $product->getDimensions();
+      foreach ($dimensions as &$dimension) {
+        $dimension *= packaging_length_conversion($product->getLengthUnits(), $context->getDefaultLengthUnits());
+      }
+      // Do this before we set dimensions!!
+      // setDimensions() should rescale all dimensions automatically.
+      $product->setLengthUnits($context->getDefaultLengthUnits());
+      $product->setDimensions($dimensions);
+
+      // Accumulate aggregate values.
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
       $product_aggregate->setPrice($product_aggregate->getPrice() + $product->getPrice());
       $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product_aggregate->setVolume($product_aggregate->getVolume() + $product->getQuantity() * $product->getVolume());
     }
 
     // Calculate the number of packages we will need.
-    if ($context->getMaximumPackageWeight() == PackagingContext::UNLIMITED_PACKAGE_WEIGHT) {
+    if ($context->getMaximumPackageVolume() == PackagingContext::UNLIMITED_PACKAGE_VOLUME) {
       $num_packages = 1;
     }
     else {
-      $num_packages = ceil($product_aggregate->getWeight() / $context->getMaximumPackageWeight());
+      $num_packages = ceil($product_aggregate->getVolume() / $context->getMaximumPackageVolume());
     }
 
     $average_quantity = $product_aggregate->getQuantity() / $num_packages;
     $average_price = $product_aggregate->getPrice() / $num_packages;
     $average_weight = $product_aggregate->getWeight() / $num_packages;
+    $average_volume = $product_aggregate->getVolume() / $num_packages;
 
     $packages = array();
     for ($i = 0; $i < $num_packages; $i++) {
@@ -61,6 +76,8 @@ class PackageAverageVolume extends PackagingStrategy {
       $package->setPrice($average_price);
       $package->setWeight($average_weight);
       $package->setWeightUnits($context->getDefaultWeightUnits());
+      $package->setVolume($average_volume);
+      $package->setLengthUnits($context->getDefaultLengthUnits());
 
       // Markup weight of package.
       $package->setShipWeight(packaging_weight_markup($package->getWeight()));

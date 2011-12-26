@@ -32,8 +32,8 @@ class PackageAverageWeight extends PackagingStrategy {
     $product_aggregate = new PackagingProduct();
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
-      // convert as necessary in order to perform all calculations in the store
-      // weight units.
+      // convert as necessary in order to perform all calculations in the
+      // default weight units.
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
       $product_aggregate->setPrice($product_aggregate->getPrice() + $product->getPrice());
       $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));

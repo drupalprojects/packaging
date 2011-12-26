@@ -302,24 +302,44 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $this->pass(t('Testing PackageAverageVolume strategy'));
 
     $context = new PackagingContext();
-    $context->setMaximumPackageWeight(15);
+    $context->setMaximumPackageVolume(50);
+    $context->setDefaultLengthUnits('IN');
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
     $context->setStrategy(new PackageAverageVolume());
 
     $packages = $context->packageProducts($this->products);
 
+    // Product aggregates.
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
+
+    // Package aggregates.
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
+
+    // Test to see if the strategy produced the expected total weight.
+    $this->assertTrue(
+      abs($package_aggregate->getWeight() - $product_aggregate->getWeight()) < 0.0001,
+      t('Total weight of packages equals total weight of products.')
+    );
+
+    // Test to see if the strategy produced the expected weight markup.
+    $this->assertTrue(
+      abs($package_aggregate->getShipWeight() - packaging_weight_markup($product_aggregate->getWeight())) < 0.0001,
+      t('Ship weight of packages equals total weight of products with markup.')
+    );
+
     // Actual number of boxes.
     $actual_number_of_packages = count($packages);
 
     // Calculate expected number of boxes.
-    //$expected_number_of_packages = ceil($product_aggregate->getVolume() / $context->getMaximumPackageVolume());
+    $expected_number_of_packages = ceil($product_aggregate->getVolume() / $context->getMaximumPackageVolume());
 
     // Test to see if the strategy produced the expected number of boxes.
-    //$this->assertTrue(
-    //  ($actual_number_of_packages == $expected_number_of_packages),
-    //  t('Number of packages equals expectation.')
-    //);
+    $this->assertTrue(
+      ($actual_number_of_packages == $expected_number_of_packages),
+      t('Number of packages equals expectation.')
+    );
+
   }
 
   /**
@@ -409,8 +429,10 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function getProductAggregate(PackagingContext $context, array $products) {
     $product_aggregate = new PackagingProduct();
     $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
+    $product_aggregate->setLengthUnits($context->getDefaultLengthUnits());
     foreach ($this->products as $product) {
       $product_aggregate->setWeight($product_aggregate->getWeight() + $product->getQuantity() * $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
+      $product_aggregate->setVolume($product_aggregate->getVolume() + $product->getQuantity() * $product->getVolume() * packaging_length_conversion($product->getLengthUnits(), $context->getDefaultLengthUnits()));
       $product_aggregate->setQuantity($product_aggregate->getQuantity() + $product->getQuantity());
     }
     $this->pass(t('Total weight of products = %total %units.', array('%total' => $product_aggregate->getWeight(), '%units' => $context->getDefaultWeightUnits())));
@@ -424,9 +446,11 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function getPackageAggregate(PackagingContext $context, array $packages) {
     $package_aggregate = new PackagingPackage();
     $package_aggregate->setWeightUnits($context->getDefaultWeightUnits());
+    $package_aggregate->setLengthUnits($context->getDefaultLengthUnits());
     foreach ($packages as $package) {
       $package_aggregate->setWeight($package_aggregate->getWeight() + $package->getWeight());
       $package_aggregate->setShipWeight($package_aggregate->getShipWeight() + $package->getShipWeight());
+      $package_aggregate->setVolume($package_aggregate->getVolume() + $package->getVolume());
       $package_aggregate->setQuantity($package_aggregate->getQuantity() + $package->getQuantity());
     }
     $this->pass(t('Total package weight = %total %units.', array('%total' => $package_aggregate->getWeight(), '%units' => $context->getDefaultWeightUnits())));

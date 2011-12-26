@@ -219,7 +219,7 @@ class PackagingProduct {
    * The mutator for the weight property is deliberately non-public. If you
    * want to alter the volume you should use setDimensions() instead.
    */
-  protected function setVolume($volume) {
+  public function setVolume($volume) {
     return $this->volume = $volume;
   }
 

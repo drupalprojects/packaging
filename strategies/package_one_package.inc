@@ -41,8 +41,8 @@ This strategy is useful if you always ship your orders in one box.  Generally, t
     // Loop over products.
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
-      // convert as necessary in order to perform all calculations in the store
-      // weight units.
+      // convert as necessary in order to perform all calculations in the
+      // default weight units.
       $item_weight = $product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits());
       $quantity = $product->getQuantity();
 
