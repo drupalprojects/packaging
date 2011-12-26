@@ -91,6 +91,26 @@ class PackagingProduct {
   }
 
   /**
+   * Constructor.
+   *
+   * WARNING. If you explicitly set the property values through the constructor
+   * rather than the mutator functions, you may be introducting inconsistencies.
+   * Specifically, the mutators ensure that volume always equals length x width
+   * x height, as expressed in the length_units of this instance.
+   *
+   * @param $property_values
+   *   Optional. An associative array with property names as keys and initial
+   *   values as values.
+   */
+  public function __construct(array $property_values) {
+    foreach ($property_values as $property => $value) {
+      if (property_exists($this, $property)) {
+        $this->$property = $value;
+      }
+    }
+  }
+
+  /**
    * Accessor for quantity property.
    */
   public function getQuantity() {
@@ -209,6 +229,21 @@ class PackagingProduct {
   }
 
   /**
+   * Accessor for volume property.
+   */
+  public function getVolume() {
+    return $this->volume;
+  }
+
+  /**
+   * The mutator for weight property is deliberately non-public.  If you want to
+   * alter the volume you should set the length, width, and height.
+   */
+  protected function setVolume($volume) {
+    return $this->volume = $volume;
+  }
+
+  /**
    * Accessor for length_units property.
    */
   public function getLengthUnits() {
@@ -220,8 +255,12 @@ class PackagingProduct {
    */
   public function setLengthUnits($length_units) {
     $this->length_units = $length_units;
-    // Re-compute volume.  Volume is always expressed in terms of the cube of
-    // the product weight units.
+    // Re-compute length, width and height with new units.
+    // $this->length = packaging_length_conversion($this->length, $length_units);
+    // $this->width = packaging_length_conversion($this->width, $length_units);
+    // $this->height = packaging_length_conversion($this->height, $length_units);
+    // Re-compute volume with new units. Volume is always expressed in terms of
+    // the cube of the product length units.
     $this->volume = $this->length * $this->width * $this->height;
   }
 

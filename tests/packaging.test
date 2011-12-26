@@ -24,7 +24,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
    * Overrides DrupalUnitTestCase::setUp().
    */
   function setUp() {
-    parent::setUp(array('packaging_test'), array());
+    parent::setUp();
 
     // Load all files needed for these Unit tests.
     $this->loadIncludes();
@@ -347,15 +347,14 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
     // Test plugin system to see that any custom plugin gets picked up.
     // PackageCustomStrategy is defined by the packaging_test module.
-    $strategy = packaging_get_instance('custom');
-
-    // Test to see if it was found!
+    //$strategy = packaging_get_instance('custom');
 
     $context = new PackagingContext();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
-    $context->setStrategy($strategy);
+    //$context->setStrategy($strategy);
+    $context->setStrategy(new PackageCustomStrategy());
 
     $packages = $context->packageProducts($this->products);
 
@@ -400,6 +399,9 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
   /**
    * Loads needed include files.
+   *
+   * DrupalUnitTestCase::setUp() does NOT install modules, so any files we
+   * require for our tests must be included here.
    */
   function loadIncludes() {
     drupal_load('module', 'packaging');
@@ -413,7 +415,9 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'packaging', 'strategies/package_average_volume');
     module_load_include('inc', 'packaging', 'strategies/package_by_volume');
     module_load_include('inc', 'packaging', 'strategies/package_average_weight');
+    drupal_load('module', 'packaging_test');
     module_load_include('inc', 'packaging_test', 'strategies/package_custom_strategy');
+    //drupal_load('module', 'ctools');
   }
 
   /**
