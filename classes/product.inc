@@ -32,9 +32,9 @@ class PackagingProduct {
    */
   public static function constructFromCommerceProduct($product) {
 
-    $contruct = new PackagingProduct();
+    $construct = new PackagingProduct();
 
-    return $contruct;
+    return $construct;
   }
 
   /**
@@ -58,23 +58,23 @@ class PackagingProduct {
   public static function constructFromUbercartProduct($product) {
 
     // New instance.
-    $contruct = new PackagingProduct();
+    $construct = new PackagingProduct();
 
     // Copy properties into this instance.
-    $contruct->quantity     = $product->qty;
-    $contruct->pkg_qty      = $product->pkg_qty;
+    $construct->quantity     = $product->qty;
+    $construct->pkg_qty      = $product->pkg_qty;
 
-    $contruct->price        = $product->sell_price;
-    $contruct->weight       = $product->weight;
-    $contruct->weight_units = $product->weight_units;
+    $construct->price        = $product->sell_price;
+    $construct->weight       = $product->weight;
+    $construct->weight_units = $product->weight_units;
 
-    $contruct->length       = $product->length;
-    $contruct->width        = $product->width;
-    $contruct->height       = $product->height;
-    $contruct->volume       = $product->length * $product->width * $product->height;
-    $contruct->length_units = $product->length_units;
+    $construct->length       = $product->length;
+    $construct->width        = $product->width;
+    $construct->height       = $product->height;
+    $construct->volume       = $product->length * $product->width * $product->height;
+    $construct->length_units = $product->length_units;
 
-    return $contruct;
+    return $construct;
   }
 
   /**
@@ -102,7 +102,7 @@ class PackagingProduct {
    *   Optional. An associative array with property names as keys and initial
    *   values as values.
    */
-  public function __construct(array $property_values) {
+  public function __construct(array $property_values = array()) {
     foreach ($property_values as $property => $value) {
       if (property_exists($this, $property)) {
         $this->$property = $value;
@@ -181,49 +181,29 @@ class PackagingProduct {
   }
 
   /**
-   * Accessor for length property.
+   * Accessor for dimensions (length, width, and height properties).
    */
-  public function getLength() {
-    return $this->length;
+  public function getDimensions() {
+    return array(
+      'length' => $this->length,
+      'width'  => $this->width,
+      'height' => $this->height
+    );
   }
 
   /**
-   * Mutator for length property.
+   * Mutator for dimensions (length, width, and height properties).
+   *
+   * @param $dimensions
+   *   Associative array with keys 'length', 'width', and 'height'.
    */
-  public function setLength($length) {
-    $this->length = $length;
-    // Re-compute volume
-    $this->volume = $this->length * $this->width * $this->height;
-  }
+  public function setDimensions(array $dimensions = array()) {
+    // Use current values of length, width, and height if not specified.
+    $dimensions  += $this->getDimensions();
+    $this->length = $dimensions['length'];
+    $this->width  = $dimensions['width'];
+    $this->height = $dimensions['height'];
 
-  /**
-   * Accessor for width property.
-   */
-  public function getWidth() {
-    return $this->width;
-  }
-
-  /**
-   * Mutator for width property.
-   */
-  public function setWidth($width) {
-    $this->width = $width;
-    // Re-compute volume
-    $this->volume = $this->length * $this->width * $this->height;
-  }
-
-  /**
-   * Accessor for height property.
-   */
-  public function getHeight() {
-    return $this->height;
-  }
-
-  /**
-   * Mutator for height property.
-   */
-  public function setHeight($height) {
-    $this->height = $height;
     // Re-compute volume
     $this->volume = $this->length * $this->width * $this->height;
   }
@@ -236,8 +216,8 @@ class PackagingProduct {
   }
 
   /**
-   * The mutator for weight property is deliberately non-public.  If you want to
-   * alter the volume you should set the length, width, and height.
+   * The mutator for the weight property is deliberately non-public. If you
+   * want to alter the volume you should use setDimensions() instead.
    */
   protected function setVolume($volume) {
     return $this->volume = $volume;
@@ -252,6 +232,11 @@ class PackagingProduct {
 
   /**
    * Mutator for length_units property.
+   *
+   * Note that length, width, height, and volume properties will be
+   * automatically re-computed so as to keep them expressed in terms of
+   * length_units.  Because of this, you should ensure that you set the
+   * length units of the product first, before you set the dimensions.
    */
   public function setLengthUnits($length_units) {
     $this->length_units = $length_units;
