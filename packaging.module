@@ -286,6 +286,12 @@ function packaging_packaging_strategy() {
         'class' => 'PackageAverageVolume',
       ),
     ),
+    'bykey' => array(
+      'title' => t('By key'),
+      'handler' => array(
+        'class' => 'PackageByKey',
+      ),
+    ),
   );
 }
 

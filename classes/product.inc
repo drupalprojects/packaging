@@ -74,6 +74,14 @@ class PackagingProduct {
     $construct->volume       = $product->length * $product->width * $product->height;
     $construct->length_units = $product->length_units;
 
+    // Copy any designated properties from the Ubercart product type to the
+    // PackagingProduct type.
+    foreach (PackagingContext::getKeys() as $key) {
+      if (property_exists($product, $key)) {
+        $construct->$key = $product->$key;
+      }
+    }
+
     return $construct;
   }
 

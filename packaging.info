@@ -16,6 +16,7 @@ files[] = strategies/package_one_package.inc
 files[] = strategies/package_average_weight.inc
 files[] = strategies/package_by_volume.inc
 files[] = strategies/package_average_volume.inc
+files[] = strategies/package_by_key.inc
 
 ; Test cases
 files[] = tests/packaging.test

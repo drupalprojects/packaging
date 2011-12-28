@@ -27,6 +27,8 @@ class PackagingContext {
   protected $weight_units = 'LB';
   protected $weight_markup_function = 'packaging_weight_markup';
 
+  protected static $keys = array();
+
 
   /**
    * Abstract function for packaging strategies.
@@ -107,7 +109,7 @@ class PackagingContext {
   }
 
   /**
-   * Accessor for weight_units property.
+   * Mutator for weight_units property.
    */
   public function setDefaultWeightUnits($weight_units = 'LB') {
     $this->weight_units = $weight_units;
@@ -179,7 +181,7 @@ class PackagingContext {
   }
 
   /**
-   * Accessor for length_units property.
+   * Mutator for length_units property.
    */
   public function setDefaultLengthUnits($length_units = 'LB') {
     $this->length_units = $length_units;
@@ -191,6 +193,23 @@ class PackagingContext {
    */
   public function getDefaultLengthUnits() {
     return $this->length_units;
+  }
+
+  /**
+   * Designates product properties as "keys" for packaging purposes.
+   *
+   * @param $keys
+   *   Associative array with values equal to names of properties.
+   */
+  public static function designateKeys(array $keys = array()) {
+    self::$keys = $keys;
+  }
+
+  /**
+   * Accessor for keys property.
+   */
+  public static function getKeys() {
+    return self::$keys;
   }
 
 }
