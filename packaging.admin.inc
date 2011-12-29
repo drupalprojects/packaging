@@ -46,49 +46,6 @@
  */
 function packaging_admin_settings($form, &$form_state) {
 
-  // Sets maximum allowed package weight.
-  $form['packaging_max_weight'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('Maximum package weight'),
-    '#description' => t('Enter the maximum allowed package weight.'),
-  );
-
-  // Defines units for maximum weight, also used as the default weight units
-  // for PackagingPackage objects.
-  $form['packaging_weight_units'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Package weight units'),
-    '#description' => t('Select the default weight units to use for packages.'),
-    '#options'     => array(
-      'lb' => t('Pounds'),
-      'oz' => t('Ounces'),
-      'kg' => t('Kilograms'),
-      'g'  => t('Grams'),
-    ),
-  );
-
-  // Sets maximum allowed package volume.
-  $form['packaging_max_volume'] = array(
-    '#type'        => 'textfield',
-    '#title'       => t('Maximum package volume'),
-    '#description' => t('Enter the maximum allowed package volume.'),
-  );
-
-  // Defines units for length, cubed for maximum volume. Also used as the
-  // default length units for PackagingPackage objects.
-  $form['packaging_length_units'] = array(
-    '#type'        => 'select',
-    '#title'       => t('Package length units'),
-    '#description' => t('Select the default length units to use for packages.'),
-    '#options'     => array(
-      'in' => t('Inches'),
-      'ft' => t('Feet'),
-      'cm' => t('Centimeters'),
-      'mm' => t('Millimeters'),
-    ),
-  );
-
-
   // Use CTools to look for any modules which define packaging strategies.
   $operations = packaging_get_strategies();
   $options = array();
@@ -139,6 +96,50 @@ function packaging_admin_settings($form, &$form_state) {
     '#type' => 'markup',
     '#markup' => check_markup($description),
   );
+
+  // Sets maximum allowed package weight.
+  $form['packaging_max_weight'] = array(
+    '#type'        => 'textfield',
+    '#title'       => t('Maximum package weight'),
+    '#description' => t('Enter the maximum allowed package weight.'),
+  );
+
+  // Defines units for maximum weight, also used as the default weight units
+  // for PackagingPackage objects.
+  $form['packaging_weight_units'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Package weight units'),
+    '#description' => t('Select the default weight units to use for packages.'),
+    '#options'     => array(
+      'lb' => t('Pounds'),
+      'oz' => t('Ounces'),
+      'kg' => t('Kilograms'),
+      'g'  => t('Grams'),
+    ),
+  );
+
+  // Sets maximum allowed package volume.
+  $form['packaging_max_volume'] = array(
+    '#type'        => 'textfield',
+    '#title'       => t('Maximum package volume'),
+    '#description' => t('Enter the maximum allowed package volume.'),
+  );
+
+  // Defines units for length, cubed for maximum volume. Also used as the
+  // default length units for PackagingPackage objects.
+  $form['packaging_length_units'] = array(
+    '#type'        => 'select',
+    '#title'       => t('Package length units'),
+    '#description' => t('Select the default length units to use for packages.'),
+    '#options'     => array(
+      'in' => t('Inches'),
+      'ft' => t('Feet'),
+      'cm' => t('Centimeters'),
+      'mm' => t('Millimeters'),
+    ),
+  );
+
+
 
   // Register additional submit handler.
   $form['#submit'][] = 'packaging_admin_settings_submit';
