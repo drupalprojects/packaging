@@ -96,7 +96,7 @@ This strategy will always return the same results if given the same set of produ
       for ($item = 0; $item < $product->getQuantity(); $item++) {
         // Test to see if putting this item into the current package will put
         // us over the package volume limit.
-        if ($context->lessThanMaximumPackageVolume($package->getVolume() + $product_volume)) {
+        if (!$context->exceedsMaximumPackageVolume($package->getVolume() + $product_volume)) {
           // No?  Then update the package information and continue.
           $package->setQuantity($package->getQuantity() + 1);
           $package->setPrice($package->getPrice() + $product->getPrice());
@@ -110,7 +110,7 @@ This strategy will always return the same results if given the same set of produ
           $found_space = FALSE;
           foreach ($packages as &$filled_package) {
             // Will it fit?
-            if ($context->lessThanMaximumPackageVolume($filled_package->getVolume() + $product_volume)) {
+            if (!$context->exceedsMaximumPackageVolume($filled_package->getVolume() + $product_volume)) {
               // Yes, update values for previously-filled package.
               $found_space = TRUE;
               $filled_package->setQuantity($filled_package->getQuantity() + 1);
