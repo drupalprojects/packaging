@@ -84,7 +84,6 @@ Once the keys have been designated, this strategy will look for products which h
       $hashtable[$hash][] = $position;
     }
 
-
     // Loop over hashtable entries to build packages.
     $packages = array();
     foreach ($hashtable as $product_list) {
@@ -101,6 +100,12 @@ Once the keys have been designated, this strategy will look for products which h
         $package->setWeight($package->getWeight() + $quantity * $products[$position]->getWeight()
 );
         $package->setWeightUnits($context->getDefaultWeightUnits());
+      }
+
+      // Copy designated product keys into the package object so we have a
+      // reference of what's in there.
+      foreach ($keynames as $key) {
+        $package->$key = $products[reset($product_list)]->$key;
       }
 
       // Markup weight of package.
