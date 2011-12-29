@@ -41,7 +41,8 @@ package_all_in_one.inc
   weight. The results are independent of the order of products in the cart.
   
 package_each_in_own.inc
-  Corresponds to the Ubercart "each-in-own" packaging method.
+  Corresponds to the Ubercart "each-in-own" packaging method, for backwards
+  compatibility.
 
 package_one_package.inc
   For backwards compatibility with shipping quote methods that didn't do
@@ -58,6 +59,14 @@ package_by_volume.inc
 package_average_volume.inc
   Number of boxes is determined by order total volume divided by package
   maximum volume.
+
+package_by_key.inc
+  Products with common "keys" are all put into the same package. Keys are any
+  user-defined property attached to the PackagingProduct object. One example
+  would be to attach taxonomy terms to the products and designate the term as
+  a key. Then all products with the same set of terms would be put into the
+  same package.
+
 
 ALL the default strategies work with multiple origin addresses and multiple
 destination addresses. ALL the default strategies may be applied to the entire

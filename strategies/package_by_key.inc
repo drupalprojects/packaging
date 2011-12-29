@@ -54,11 +54,9 @@ Once the keys have been designated, this strategy will look for products which h
    */
   public function packageProducts(PackagingContext $context, array $products) {
 
-    // Loop over products, use common weight units.
+    // Weight units are set on a per-product basis, so convert all products
+    // to default weight units before performing any calculations.
     foreach ($products as $product) {
-      // Get item weight. Weight units are set on a per-product basis, so we
-      // convert as necessary in order to perform all calculations in the
-      // default weight units.
       $product->setWeight($product->getWeight() * packaging_weight_conversion($product->getWeightUnits(), $context->getDefaultWeightUnits()));
       $product->setWeightUnits($context->getDefaultWeightUnits());
     }
@@ -66,10 +64,13 @@ Once the keys have been designated, this strategy will look for products which h
     $hashtable = array();
     $keynames = PackagingContext::getKeys();
 
-    // Loop over products.
-    foreach ($products as $position => $product) {
-      // Compute a hash value using all the keys.
-      // Products with the same keys will have the same hash value.
+//debug($products);
+    // Loop over products to build hashtable. Each entry in the hashtable
+    // represents a package. Products with the same hash value will be in
+    // the same package.
+    foreach ($products as $index => $product) {
+      // Compute a hash value using all the designated keys.
+      // Products with equal key values will have equal hash values.
       $hash = '';
       foreach ($keynames as $key) {
         if (!property_exists($product, $key)) {
@@ -78,26 +79,26 @@ Once the keys have been designated, this strategy will look for products which h
         }
         $hash .= $product->$key;
       }
-
-      // Assign this product to a package based on the hash value.
-      // Products with the same hash value will be in the same package.
-      $hashtable[$hash][] = $position;
+      // Save product index in hashtable.
+      $hashtable[$hash][] = $index;
     }
 
-    // Loop over hashtable entries to build packages.
+//debug($hashtable);
+    // Loop over hashtable entries to build PackagingPackage objects.
+    // Each hashtable entry corresponds to one package.
     $packages = array();
     foreach ($hashtable as $product_list) {
-      // Create package.
+      // Create package object.
       $package  = new PackagingPackage();
       $package->setWeightUnits($context->getDefaultWeightUnits());
 
       // Loop over product indexes stored in the hashtable.
-      foreach ($product_list as $postion) {
+      foreach ($product_list as $index) {
         // Add product values to the package values.
-        $quantity = $products[$position]->getQuantity();
+        $quantity = $products[$index]->getQuantity();
         $package->setQuantity($package->getQuantity() + $quantity);
-        $package->setPrice($package->getPrice() + $quantity * $products[$position]->getPrice());
-        $package->setWeight($package->getWeight() + $quantity * $products[$position]->getWeight()
+        $package->setPrice($package->getPrice() + $quantity * $products[$index]->getPrice());
+        $package->setWeight($package->getWeight() + $quantity * $products[$index]->getWeight()
 );
         $package->setWeightUnits($context->getDefaultWeightUnits());
       }
@@ -110,6 +111,7 @@ Once the keys have been designated, this strategy will look for products which h
 
       // Markup weight of package.
       $package->setShipWeight(packaging_weight_markup($package->getWeight()));
+//debug($package);
 
       // Save the package to the array.
       $packages[] = $package;

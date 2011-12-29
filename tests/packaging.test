@@ -343,6 +343,73 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
+   * Test package by key strategy.
+   */
+  function testPackageByKey() {
+    $this->pass(t('Testing PackageByKey strategy'));
+
+    // We need test products with special keys to test this strategy.
+    $keyarray = array('from' => "Sammamish, WA", 'to' => "Baltimore, MD");
+
+    // Designate keys BEFORE we create PackagingProduct objects.
+    PackagingContext::designateKeys(array_keys($keyarray));
+
+    $this->products = $this->createTestProducts($keyarray);
+
+    //debug($this->products);
+
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageByKey());
+
+    $packages = $context->packageProducts($this->products);
+
+    // Product aggregates.
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
+    //debug($product_aggregate);
+
+    // Package aggregates.
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
+    //debug($package_aggregate);
+
+    // Test to see if the strategy produced the expected total weight.
+    $this->assertTrue(
+      abs($package_aggregate->getWeight() - $product_aggregate->getWeight()) < 0.0001,
+      t('Total weight of packages equals total weight of products.')
+    );
+
+    // Test to see if the strategy produced the expected weight markup.
+    $this->assertTrue(
+      abs($package_aggregate->getShipWeight() - packaging_weight_markup($product_aggregate->getWeight())) < 0.0001,
+      t('Ship weight of packages equals total weight of products with markup.')
+    );
+
+    // Actual number of boxes.
+    $actual_number_of_packages = count($packages);
+
+    // Calculate expected number of boxes.
+    $keynames = PackagingContext::getKeys();
+
+    $hashtable = array();
+    foreach ($this->products as $index => $product) {
+      $hash = '';
+      foreach ($keynames as $key) {
+        $hash .= $product->$key;
+      }
+      $hashtable[$hash][] = $index;
+    }
+    $expected_number_of_packages = count($hashtable);
+
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages == $expected_number_of_packages),
+      t('Number of packages equals expectation.')
+    );
+  }
+  /**
    * Test custom strategy.
    */
   function testPackageCustomStrategy() {
@@ -418,6 +485,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'packaging', 'strategies/package_average_volume');
     module_load_include('inc', 'packaging', 'strategies/package_by_volume');
     module_load_include('inc', 'packaging', 'strategies/package_average_weight');
+    module_load_include('inc', 'packaging', 'strategies/package_by_key');
     drupal_load('module', 'packaging_test');
     module_load_include('inc', 'packaging_test', 'strategies/package_custom_strategy');
     //drupal_load('module', 'ctools');
@@ -462,12 +530,15 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
 
   /**
    * Creates a new product.
+   *
+   * @param $keyarray
+   *   Array containing $key => $value pairs to add as product properties.
    */
-  function createTestProducts() {
+  function createTestProducts(array $keyarray = array()) {
     $products = array();
     $number = mt_rand(5, 10);
     for ($i = 0; $i < $number; $i++) {
-      $products[] = PackagingProduct::constructFromUbercartProduct($this->createProduct());
+      $products[] = PackagingProduct::constructFromUbercartProduct($this->createProduct($keyarray));
     }
     return $products;
   }
