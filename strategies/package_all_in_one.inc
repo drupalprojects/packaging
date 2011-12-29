@@ -149,7 +149,7 @@ This strategy will always return the same results if given the same set of produ
     $weight_a = $a->getWeight();
     $weight_b = $b->getWeight();
 
-    if ($a == $b) {
+    if ($weight_a == $weight_b) {
       return 0;
     }
     // Reverse order.
