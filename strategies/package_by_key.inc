@@ -32,11 +32,6 @@
  * package all products with the same term in the same package. This is useful
  * when you have perisable products, for instance, that may need to be shipped
  * together via an Express method, or with special handling.
- *
- * WARNING: If you designate too many keys, this routine will blow up under the
- * combinatorics. If there are n keys designated, each with m_{i} different
- * values, the number of combinations is \prod_{i=1}^{n} m_{i} which may be
- * very large.
  */
 class PackageByKey extends PackagingStrategy {
 
@@ -79,34 +74,33 @@ Once the keys have been designated, this strategy will look for products which h
         }
         $hash .= $product->$key;
       }
-      // Save product index in hashtable.
+      // Save index in the hashtable.
       $hashtable[$hash][] = $index;
     }
 
 //debug($hashtable);
+
     // Loop over hashtable entries to build PackagingPackage objects.
     // Each hashtable entry corresponds to one package.
     $packages = array();
-    foreach ($hashtable as $product_list) {
+    foreach ($hashtable as $table_entry) {
       // Create package object.
       $package  = new PackagingPackage();
       $package->setWeightUnits($context->getDefaultWeightUnits());
 
       // Loop over product indexes stored in the hashtable.
-      foreach ($product_list as $index) {
-        // Add product values to the package values.
-        $quantity = $products[$index]->getQuantity();
-        $package->setQuantity($package->getQuantity() + $quantity);
-        $package->setPrice($package->getPrice() + $quantity * $products[$index]->getPrice());
-        $package->setWeight($package->getWeight() + $quantity * $products[$index]->getWeight()
-);
-        $package->setWeightUnits($context->getDefaultWeightUnits());
+      foreach ($table_entry as $index) {
+        // Add the product to this package.
+        $package->addProduct($products[$index]);
       }
 
-      // Copy designated product keys into the package object so we have a
-      // reference of what's in there.
+      // Copy designated product keys onto the package object so the package
+      // can be queried by key later.
       foreach ($keynames as $key) {
-        $package->$key = $products[reset($product_list)]->$key;
+        // Values for the designated product keys are taken from first product
+        // in the package, but all products in the package will have the same
+        // values at this point.
+        $package->$key = $products[reset($table_entry)]->$key;
       }
 
       // Markup weight of package.

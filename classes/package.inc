@@ -6,6 +6,8 @@
 
 
 /**
+ * Represents a physical container that may hold products.
+ *
  * $package object defined by this class contains the following members:
  *   - quantity:     Number of items in package.
  *   - price:        Value (sales price, in store currency) of items in package.
@@ -22,6 +24,12 @@ class PackagingPackage {
   protected $volume       = 0.0;
   protected $length_units = 'IN';
   protected $shipweight   = 0.0;
+
+  /**
+   * Array holding references to the PackagingProduct objects stored
+   * in this package.
+   */
+  protected $products = array();
 
 
   /**
@@ -120,6 +128,52 @@ class PackagingPackage {
    */
   public function setLengthUnits($length_units) {
     $this->length_units = $length_units;
+  }
+
+  /**
+   * Accessor for products property.
+   */
+  public function getProducts() {
+    return $this->products;
+  }
+
+  /**
+   * Mutator for products property.
+   */
+  public function setProducts(array $products) {
+    $this->products = $products;
+    // Re-compute package totals.
+    $this->updateTotals();
+  }
+
+  /**
+   * Recomputes the package weight, price, etc. based on the current
+   * list of products in the package.
+   */
+  protected function updateTotals() {
+    foreach ($this->products as $product) {
+      // Add product values to the package values.
+      $quantity = $product->getQuantity();
+      $this->quantity += $quantity;
+      $this->price    += $quantity * $product->getPrice();
+      $this->weight   += $quantity * $product->getWeight();
+      $this->volume   += $quantity * $product->getVolume();
+    }
+  }
+
+
+  /**
+   * Adds a product to the package.
+   */
+  public function addProduct(PackagingProduct $product) {
+    $this->products[] = $product;
+
+    // Update the package values to include this new product.
+    $quantity = $product->getQuantity();
+    $this->quantity += $quantity;
+    $this->price    += $quantity * $product->getPrice();
+    $this->weight   += $quantity * $product->getWeight();
+    $this->volume   += $quantity * $product->getVolume();
   }
 
 }

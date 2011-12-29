@@ -390,6 +390,12 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $actual_number_of_packages = count($packages);
 
     // Calculate expected number of boxes.
+
+    // This is the same algorithm used in PackageByKey, so it's not a surprise
+    // it will calculate the same number of packages. It would be nice to have
+    // an independent way to calculate the number of packages expected, because
+    // that would be a more meaningful test.
+
     $keynames = PackagingContext::getKeys();
 
     $hashtable = array();
@@ -409,6 +415,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
       t('Number of packages equals expectation.')
     );
   }
+
   /**
    * Test custom strategy.
    */

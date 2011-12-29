@@ -198,6 +198,11 @@ class PackagingContext {
   /**
    * Designates product properties as "keys" for packaging purposes.
    *
+   * Keys may be any type of public property attached to the product object.
+   * However, if the property is an object type, it MUST be castable to a
+   * string. This typically means the object type must implement the magic
+   * method __toString().
+   *
    * @param $keys
    *   Associative array with values equal to names of properties.
    */
