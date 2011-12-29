@@ -101,8 +101,9 @@ function packaging_admin_settings($form, &$form_state) {
     '#type'          => 'select',
     '#title'         => t('Packaging strategy'),
     '#description'   => t('Select the packaging strategy that is most appropriate to the types of products you sell.'),
+    '#element_validate' => array('packaging_strategy_element_validate'),
     '#options'       => $options,
-    //'#default_value' => variable_get('packaging_strategy', 1),
+    '#default_value' => variable_get('packaging_strategy', reset($options)),
     '#ajax' => array(
       'wrapper' => 'packaging-strategy-description-fieldset-wrapper',
       'callback' => 'packaging_strategy_select_callback',
@@ -119,17 +120,12 @@ function packaging_admin_settings($form, &$form_state) {
     '#suffix' => '</div>',
   );
 
-  // The 'question' form element is examined in the validation function
-  // ajax_example_dynamic_sections_validate(), so we must initialize it here.
-  // Making it a hidden element allows us to give it a value without displaying
-  // anything to the user.
 
   if (!empty($form_state['values']['packaging_strategy'])) {
     $strategy = $form_state['values']['packaging_strategy'];
   }
   else {
-    reset($operations);
-    $strategy = reset(array_keys($operations));
+    $strategy = variable_get('packaging_strategy', reset($options));
   }
 
   if ($instance = packaging_get_instance($strategy)) {
@@ -161,12 +157,26 @@ function packaging_strategy_select_callback($form, $form_state) {
 
 
 /**
+ * Element validation handler for packaging_admin_settings() form.
+ */
+function packaging_strategy_element_validate($element, &$form_state) {
+  $operation = $element['#value'];
+  $instance = packaging_get_instance($operation);
+  if (!isset($instance)) {
+    form_error($element, t('The %operation strategy could not be located. Please contact the site administrator.', array('%operation' => $operation)));
+  }
+}
+
+/**
  * Form submission handler for packaging_admin_settings() form.
  */
 function packaging_admin_settings_submit($form, &$form_state) {
+  // Print message for testing purposes - won't do this in release version.
   $operation = $form_state['values']['packaging_strategy'];
   if ($instance = packaging_get_instance($operation)) {
-    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
+    $context = new PackagingContext();
+    $context->setStrategy($instance);
+    drupal_set_message("Invoked packageProducts()<pre>" . var_export($context->packageProducts(array(new PackagingProduct(), new PackagingProduct())), TRUE) . "</pre>");
   }
 }
 
@@ -186,7 +196,12 @@ function print_info() {
     '#type' => 'select',
     '#title' => t('Please choose Strategy'),
     '#options' => $options,
+    '#default_value' => variable_get('strategy', reset($options)),
   );
+
+  //$form['hooks'] = array(
+  //  '#markup' => '<pre>' .  ctools_plugin_api_get_hook('views', 'views') . '</pre>',
+  //);
 
   $form['operations'] = array(
     '#markup' => '<pre>' . var_export($operations, TRUE) . '</pre>',
@@ -198,7 +213,10 @@ function print_info() {
     '#value' => t('Select strategy'),
   );
 
-  return $form;
+  // Register additional submit handler.
+  $form['#submit'][] = 'print_info_submit';
+
+  return system_settings_form($form);
 }
 
 /**
@@ -208,6 +226,8 @@ function print_info() {
 function print_info_submit($form, &$form_state) {
   $operation = $form_state['values']['strategy'];
   if ($instance = packaging_get_instance($operation)) {
-    drupal_set_message("Invoked packageProducts()<pre>" . var_export($instance->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
+    $context = new PackagingContext();
+    $context->setStrategy($instance);
+    drupal_set_message("Invoked packageProducts()<pre>" . var_export($context->packageProducts(array(new PackagingProduct(), new PackagingProduct())), TRUE) . "</pre>");
   }
 }
