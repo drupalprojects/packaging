@@ -11,20 +11,26 @@ Motivation
 Packaging has until now has been implemented independently by each and every
 different shipping quote module.
 
-Abstracting packaging out into its own module accomplishes five things:
+Abstracting packaging out into its own module accomplishes six things:
 
 1) Code duplication is eliminated. No longer will USPS, UPS, FedEX,
-   Canada Post, etc. all have their own slightly-different implementations.
+   Canada Post, etc. all have their own slightly-different methods of
+   packaging orders.
 2) Packaging is done uniformly between different quote methods. "All-in-one"
    will now package an order exactly the same way for USPS as it does for UPS.
 3) Quote methods that don't currently use packaging, such as uc_flatrate, now
    have the option to use it. So uc_flatrate may now charge a flatrate per
    package, if for example the order ships to more than one destination or
    originates from more than one warehouse.
-4) Packaging strategies are extensible using a plugin mechanism. If the
+4) Automated test rountines are integrated. This is difficult to do in a
+   shopping cart module when packaging is part of the shipping quotes because
+   shipping quotes modules may use external web services which are not
+   available to the testbot. As a standalone module, Packaging implements unit
+   tests for algorithms used for every shipping module.
+5) Packaging strategies are extensible using a plugin mechanism. If the
    built-in packaging methods don't suit you, it's easy to write your own and
    share your own with others.
-5) Architecture enables development of new features. Packaging strategies can
+6) Architecture enables development of new features. Packaging strategies can
    be computationally difficult: by abstracting out the packaging strategy this
    module provides a simple mechanism to develop and test new features.
 

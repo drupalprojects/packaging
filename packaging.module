@@ -96,11 +96,12 @@ define('PACKAGING_MM_TO_CM', 0.1);
  * you must divide up the products first, then call this function multiple
  * times.
  *
- * The $package object returned from this routine
+ * The $package object returned from this routine contains:
  *   - quantity:     Number of items in package.
  *   - price:        Value (sales price, in store currency) of items in package.
- *   - weight:       Actual weight of items in package, in store weight units.
- *   - weight_units: Set to store default. Taken from packaging_weight_units variable.
+ *   - weight:       Actual weight of items in package, in default weight units.
+ *   - weight_units: Set to Context default. Taken from packaging_weight_units
+ *                   variable.
  *   - shipweight:   Computed weight of package, including markup.
  *
  * Store weight units are used internally for computation of package weights.
@@ -213,7 +214,8 @@ function packaging_menu() {
   $items = array();
 
   $items['admin/settings/packaging'] = array(
-    'title'            => 'Packaging',
+    'title'            => 'Packaging settings',
+    'description'      => 'Configure operation of the Packaging module.',
     'page callback'    => 'drupal_get_form',
     'page arguments'   => array('packaging_admin_settings'),
     'access arguments' => array('configure packaging'),

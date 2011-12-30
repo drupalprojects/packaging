@@ -42,7 +42,8 @@ class PackageAverageVolume extends PackagingStrategy {
         $dimension *= packaging_length_conversion($product->getLengthUnits(), $context->getDefaultLengthUnits());
       }
       // Do this before we set dimensions!!
-      // setDimensions() should rescale all dimensions automatically.
+      // setDimensions() should (but currently doesn't) rescale all dimensions
+      // automatically.
       $product->setLengthUnits($context->getDefaultLengthUnits());
       $product->setDimensions($dimensions);
 
@@ -70,6 +71,9 @@ class PackageAverageVolume extends PackagingStrategy {
     for ($i = 0; $i < $num_packages; $i++) {
       // Create package.
       $package = new PackagingPackage();
+
+      // Should use "Worst fit" strategy here to allocate products
+      // to packages as evenly as possible.
 
       // Set package values to the average values.
       $package->setQuantity($average_quantity);

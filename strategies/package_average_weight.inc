@@ -57,6 +57,9 @@ class PackageAverageWeight extends PackagingStrategy {
       $package = new PackagingPackage();
 
       // Set package values to the average values.
+
+      // Should use "Worst fit" strategy here to allocate products
+      // to packages as evenly as possible.
       $package->setQuantity($average_quantity);
       $package->setPrice($average_price);
       $package->setWeight($average_weight);
