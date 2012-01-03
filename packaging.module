@@ -269,9 +269,15 @@ function packaging_ctools_plugin_directory($module, $plugin) {
 function packaging_packaging_strategy() {
   return array(
     'allinone' => array(
-      'title' => t('All-in-one'),
+      'title' => t('All-in-one (first fit)'),
       'handler' => array(
         'class' => 'PackageAllInOne',
+      ),
+    ),
+    'lastfit' => array(
+      'title' => t('All-in-one (last fit)'),
+      'handler' => array(
+        'class' => 'PackageLastFit',
       ),
     ),
     'eachinown' => array(

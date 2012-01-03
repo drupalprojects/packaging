@@ -35,9 +35,9 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Test "All-in-one" packaging, where all products are put into one package
-   * subject only to package maximum weight.  If maximum weight is exceeded,
-   * a new package is created.
+   * Test "All-in-One First fit" packaging, where all products are put into
+   * one package subject only to package maximum weight.  If maximum weight
+   * is exceeded, a new package is created.
    */
   function testPackageAllInOne() {
     $this->pass(t('Testing PackageAllInOne strategy'));
@@ -47,6 +47,65 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
     $context->setStrategy(new PackageAllInOne());
+
+    $packages = $context->packageProducts($this->products);
+
+    //debug($packages);
+
+    // Product aggregates.
+    $product_aggregate = $this->getProductAggregate($context, $this->products);
+
+    // Package aggregates.
+    $package_aggregate = $this->getPackageAggregate($context, $packages);
+
+    // Test to see if the strategy produced the expected total weight.
+    $this->assertTrue(
+      abs((float) $package_aggregate->getWeight() - (float) $product_aggregate->getWeight()) < 0.0001,
+      t('Total weight of packages equals total weight of products.')
+    );
+
+    // Test to see if the strategy produced the expected weight markup.
+    $this->assertTrue(
+      abs((float) $package_aggregate->getShipWeight() - (float) packaging_weight_markup((float) $product_aggregate->getWeight())) < 0.0001,
+      t('Ship weight of packages equals total weight of products with markup.')
+    );
+
+    // Actual number of boxes.
+    $actual_number_of_packages = count($packages);
+
+    // Calculate minimum possible number of boxes.
+    $minimum_number_of_packages = ceil($product_aggregate->getWeight() / $context->getMaximumPackageWeight());
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages >= $minimum_number_of_packages),
+      t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
+    );
+
+    // Test different origin addresses
+
+    // Test different destination addresses
+
+    // Test effect of maximum package weight
+
+    // Test effect of package quantity
+
+    // Test effect of weight markup
+  }
+
+  /**
+   * Test "All-in-One Last fit" packaging, where all products are put into
+   * one package subject only to package maximum weight.  If maximum weight
+   * is exceeded, a new package is created.
+   */
+  function testPackageLastFit() {
+    $this->pass(t('Testing PackageLastFit strategy'));
+
+    $context = new PackagingContext();
+    $context->setMaximumPackageWeight(15);
+    $context->setDefaultWeightUnits('LB');
+    $context->setWeightMarkupFunction('packaging_weight_markup');
+    $context->setStrategy(new PackageLastFit());
 
     $packages = $context->packageProducts($this->products);
 
@@ -488,6 +547,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     module_load_include('inc', 'packaging', 'classes/strategy');
     module_load_include('inc', 'packaging', 'strategies/package_each_in_own');
     module_load_include('inc', 'packaging', 'strategies/package_all_in_one');
+    module_load_include('inc', 'packaging', 'strategies/package_last_fit');
     module_load_include('inc', 'packaging', 'strategies/package_one_package');
     module_load_include('inc', 'packaging', 'strategies/package_average_volume');
     module_load_include('inc', 'packaging', 'strategies/package_by_volume');
