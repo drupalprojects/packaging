@@ -80,52 +80,41 @@ This strategy will always return the same results if given the same set of produ
 
       // Loop over quantity of each product.
       for ($item = 0; $item < $product->getQuantity(); $item++) {
-        // Test to see if putting this item into the current package will put
-        // us over the package weight limit.
-        if (!$context->exceedsMaximumPackageWeight($package->getWeight() + $product_weight)) {
-          // No?  Then update the package information and continue.
-          $package->setQuantity($package->getQuantity() + 1);
-          $package->setPrice($package->getPrice() + $product->getPrice());
-          $package->setWeight($package->getWeight() + $product_weight);
+        // Try to fit this item into one of the existing packages. If this
+        // item is small it might fit into the available space rather than
+        // needing a new package.
+        $found_space = FALSE;
+        foreach ($packages as &$existing_package) {
+          // Will it fit?
+          if (!$context->exceedsMaximumPackageWeight($existing_package->getWeight() + $product_weight)) {
+            // Yes, update values for this existing package.
+            $found_space = TRUE;
+            $existing_package->setQuantity($existing_package->getQuantity() + 1);
+            $existing_package->setPrice($existing_package->getPrice() + $product->getPrice());
+            $existing_package->setWeight($existing_package->getWeight() + $product_weight);
+            // Because we've added a product, we need to adjust the weight
+            // markup weight of this existing package.
+            $existing_package->setShipWeight(packaging_weight_markup($existing_package->getWeight()));
+            // Found some free room for this item.
+            break;
+          }
         }
-        else {
-          // If weight >= maximum allowed weight, try to fit this item into one
-          // of the previously-filled packages. If this item is small it might
-          // fit into the available space rather than needing a new package.
-          $found_space = FALSE;
-          foreach ($packages as &$filled_package) {
-            // Will it fit?
-            if (!$context->exceedsMaximumPackageWeight($filled_package->getWeight() + $product_weight)) {
-              // Yes, update values for previously-filled package.
-              $found_space = TRUE;
-              $filled_package->setQuantity($filled_package->getQuantity() + 1);
-              $filled_package->setPrice($filled_package->getPrice() + $product->getPrice());
-              $filled_package->setWeight($filled_package->getWeight() + $product_weight);
-              // Because we've added a product, we need to adjust the weight
-              // markup weight of this previously-filled package.
-              $filled_package->setShipWeight(packaging_weight_markup($filled_package->getWeight()));
-              // Found some free room for this item.
-              break;
-            }
-          }
-          if (!$found_space) {
-            // If we reach here, the item won't fit in the current package and
-            // won't fit in a previously-filled package, so we need to close off
-            // the current package and start a new one.
+        if (!$found_space) {
+          // If we reach here, the item won't fit into an existing package,
+          // so we need to close off the current package and start a new one.
 
-            // Markup weight of current package.
-            $package->setShipWeight(packaging_weight_markup($package->getWeight()));
+          // Markup weight of current package.
+          $package->setShipWeight(packaging_weight_markup($package->getWeight()));
 
-            // Save current package to the array.
-            $packages[] = $package;
+          // Save current package to the array.
+          $packages[] = $package;
 
-            // Put this item into a new package.
-            $package = new PackagingPackage();
-            $package->setQuantity(1);
-            $package->setPrice($product->getPrice());
-            $package->setWeight($product_weight);
-            $package->setWeightUnits($context->getDefaultWeightUnits());
-          }
+          // Put this item into a new package.
+          $package = new PackagingPackage();
+          $package->setQuantity(1);
+          $package->setPrice($product->getPrice());
+          $package->setWeight($product_weight);
+          $package->setWeightUnits($context->getDefaultWeightUnits());
         }
       }
     }
