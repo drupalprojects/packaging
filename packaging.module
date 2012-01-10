@@ -280,6 +280,12 @@ function packaging_packaging_strategy() {
         'class' => 'PackageLastFit',
       ),
     ),
+    'nextfit' => array(
+      'title' => t('All-in-one (next fit)'),
+      'handler' => array(
+        'class' => 'PackageNextFit',
+      ),
+    ),
     'eachinown' => array(
       'title' => t('Each in own'),
       'handler' => array(
