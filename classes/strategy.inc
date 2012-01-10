@@ -21,7 +21,7 @@ abstract class PackagingStrategy {
    * Subclasses must implement this function to provide a strategy.
    *
    * @param PackagingContext $context
-   *   An array of nodes of type PackagingProduct.
+   *   An object holding extrinsic state information for a strategy instance.
    * @param $products
    *   An array of nodes of type PackagingProduct.
    *

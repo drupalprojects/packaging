@@ -39,6 +39,8 @@ Abstracting packaging out into its own module accomplishes six things:
 Default strategies
 ==================
 package_all_in_one.inc
+package_last_fit.inc
+package_next_fit.inc
   Roughly corresponds to the Ubercart "all-in-one" packaging method. Code was
   taken from uc_fedex. Unifies the two different implementations provided by
   uc_ups and uc_usps and fixes many bugs with both implementations.

@@ -2,21 +2,19 @@
 
 /**
  * @file
- * Class definition for packaging strategies.
+ * Class definition for packaging context.
  */
 
 
 /**
- * Abstract class for packaging strategies.
- *
- * Declares a packageProducts() function which much be implemented by
- * subclasses wishing to provide their own packaging strategy. Defines
- * some utility routines.
+ * Contains context information needed for packaging strategies.
  */
 class PackagingContext {
 
   /** Constant used in internal implementation to indicate unlimited weight */
   const UNLIMITED_PACKAGE_WEIGHT = -1;
+
+  /** Constant used in internal implementation to indicate unlimited volume */
   const UNLIMITED_PACKAGE_VOLUME = -1;
 
   protected $strategy = NULL;
@@ -31,9 +29,7 @@ class PackagingContext {
 
 
   /**
-   * Abstract function for packaging strategies.
-   *
-   * Subclasses must implement this function to provide a strategy.
+   * Invokes packaging strategy chosen for this context..
    *
    * @param $products
    *   An array of nodes of type Product.

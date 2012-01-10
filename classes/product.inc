@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Class definition for products.
  */
 
 /**
@@ -13,7 +14,7 @@ class PackagingProduct {
   protected $destination;
 
   protected $quantity     = 0.0;
-  protected $pkg_qty      = 0.0;
+  protected $pkg_qty      = 0;
 
   protected $price        = 0.0;
   protected $weight       = 0.0;
@@ -24,6 +25,11 @@ class PackagingProduct {
   protected $height       = 0.0;
   protected $volume       = 0.0;
   protected $length_units = 'IN';
+
+  /**
+   * Harmonized Commodity Description and Coding System (HS) code.
+   */
+  protected $HS_code = '';
 
 
   /**
@@ -103,7 +109,7 @@ class PackagingProduct {
    *
    * WARNING. If you explicitly set the property values through the constructor
    * rather than the mutator functions, you may be introducting inconsistencies.
-   * Specifically, the mutators ensure that volume always equals length x width
+   * For example, the mutators ensure that volume always equals length x width
    * x height, as expressed in the length_units of this instance.
    *
    * @param $property_values
