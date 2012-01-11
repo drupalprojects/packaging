@@ -12,7 +12,7 @@
  * This is a clone of PackageAverageWeight, with the number of packages
  * hardwired to 23.
  */
-class PackageCustomStrategy extends PackagingStrategy {
+class PackageCustomStrategy implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

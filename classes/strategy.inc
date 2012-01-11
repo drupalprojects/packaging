@@ -13,7 +13,7 @@
  * subclasses wishing to provide their own packaging strategy. Defines
  * some utility routines.
  */
-abstract class PackagingStrategy {
+interface PackagingStrategy {
 
   /**
    * Abstract function for packaging strategies.
@@ -28,7 +28,7 @@ abstract class PackagingStrategy {
    * @return
    *   An array of Package objects, each containing one or more of the products.
    */
-  abstract public function packageProducts(PackagingContext $context, array $products);
+  public function packageProducts(PackagingContext $context, array $products);
 
   /**
    * Describes the packaging algorithm implemented by subclasses.
@@ -36,8 +36,6 @@ abstract class PackagingStrategy {
    * @return
    *   String containing a description of the packaging strategy.
    */
-  public function getDescription() {
-    return t('No description is available for this packaging method.');
-  }
+  public function getDescription();
 
 }

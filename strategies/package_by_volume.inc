@@ -32,7 +32,7 @@
  * This strategy will always return the same results if given the same set of
  * products.
  */
-class PackageByVolume extends PackagingStrategy {
+class PackageByVolume implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

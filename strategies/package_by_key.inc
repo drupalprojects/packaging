@@ -33,7 +33,7 @@
  * when you have perisable products, for instance, that may need to be shipped
  * together via an Express method, or with special handling.
  */
-class PackageByKey extends PackagingStrategy {
+class PackageByKey implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

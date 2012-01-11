@@ -14,7 +14,7 @@
  * weight. The resulting packages are assigned identical weights, prices, etc.
  * so as to simulate uniform distribution of products amongst the packages.
  */
-class PackageAverageWeight extends PackagingStrategy {
+class PackageAverageWeight implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

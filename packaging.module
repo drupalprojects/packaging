@@ -374,8 +374,8 @@ function packaging_get_instance($id) {
     }
     $instances[$id] = new $class();
 
-    // Check that plugin class is a subclass of 'PackagingStrategy'.
-    if (!is_subclass_of($instances[$id], 'PackagingStrategy')) {
+    // Check that the plugin class implements PackagingStrategy.
+    if (!($instances[$id] instanceof PackagingStrategy)) {
       $instances[$id] = NULL;
     }
   }

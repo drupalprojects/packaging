@@ -14,7 +14,7 @@
  * volume. The resulting packages are assigned identical weights, prices, etc.
  * so as to simulate uniform distribution of products amongst the packages.
  */
-class PackageAverageVolume extends PackagingStrategy {
+class PackageAverageVolume implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

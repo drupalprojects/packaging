@@ -30,7 +30,7 @@
  * This strategy will always return the same results if given the same set of
  * products.
  */
-class PackageLastFit extends PackagingStrategy {
+class PackageLastFit implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

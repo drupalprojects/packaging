@@ -23,7 +23,7 @@
  * quantity property, this strategy will create a new package. Likewise, a new
  * package will be created for each individual product line item.
  */
-class PackageEachInOwn extends PackagingStrategy {
+class PackageEachInOwn implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().

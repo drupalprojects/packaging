@@ -1,7 +1,7 @@
 About
 =====
-This module provides algorithms for splitting shippable orders into physical
-packages. The intent is that shipping quotes modules will use these
+This module provides heuristic algorithms for splitting shippable orders into
+physical packages. The intent is that shipping quotes modules will use these
 algorithms in lieu of coding their own packaging routines. New algorithms may
 easily be provided using the plugin architecture of this module.
 
@@ -28,12 +28,11 @@ Abstracting packaging out into its own module accomplishes six things:
    available to the testbot. As a standalone module, Packaging implements unit
    tests for algorithms used for every shipping module.
 5) Packaging strategies are extensible using a plugin mechanism. If the
-   built-in packaging methods don't suit you, it's easy to write your own and
-   share your own with others.
+   built-in packaging strategies don't suit you, it's easy to write your own
+   strategy and share your strategy with others.
 6) Architecture enables development of new features. Packaging strategies can
    be computationally difficult: by abstracting out the packaging strategy this
    module provides a simple mechanism to develop and test new features.
-
 
 
 Default strategies
@@ -75,7 +74,6 @@ package_by_key.inc
   a key. Then all products with the same set of terms would be put into the
   same package.
 
-
 ALL the default strategies work with multiple origin addresses and multiple
 destination addresses. ALL the default strategies may be applied to the entire
 order or to just a subset of the order's product, allowing you to "mix and
@@ -86,7 +84,6 @@ must be shipped in case lots.
 
 Defining your own strategy
 ==========================
-
 An example of a module that creates a new packaging strategy,
 packaging_test.module, may be found in the tests subdirectory. Use this
 working example as a guide when writing your own module.  Here are the
@@ -94,16 +91,16 @@ minimum necessary steps:
 
 1) Create a new module for your strategy.
 2) Module must implement two hooks:
-   a) hook_test_ctools_plugin_directory() - indicates where your module's
+   a) hook_test_ctools_plugin_directory() - Indicates where your module's
       plugings can be found. Typically this would be in a subdirectory under
       your module's main directory.
-   b) hook_packaging_strategy() - declares the strategy name(s) and handler
+   b) hook_packaging_strategy() - Declares the strategy name(s) and handler
       class(es) for any packaging strategies implemented by your module.
-3) Create an include file in your plugin directory with defines a subclass
-   of PackagingStrategy.
-4) Implement the packageProducts() function in your subclass.
-5) In the module that uses strategies (e.g. Ubercart or Commerce),
-   set up a rule to select your strategy under the appropriate conditions.
+3) Create an include file in your plugin directory which contains a class
+   implementing PackagingStrategy.
+4) Implement the packageProducts() and getDescription() methods in your class.
+5) Modules that uses strategies (e.g. Ubercart or Commerce) will now be able
+   to use your strategy in the same way as built-in strategies.
 
 
 Troubleshooting

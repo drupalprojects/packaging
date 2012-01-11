@@ -10,16 +10,15 @@
  * Puts all products into one package, with no restrictions.
  *
  * The "One package" strategy is an extremely simple packaging strategy which
- * puts all products into one package. This strategy doesn't care about
- * product weights or any other metric - everything goes into one package,
- * period.
+ * puts all products into one package. This strategy doesn't care about product
+ * weights or any other metric - everything goes into one package, period.
  *
  * This strategy is useful if you always ship your orders in one box.
  * Generally, that means your items are small and light enough so that any
- * quantity you can reasonably expect to sell will fit in one of your
+ * quantity you can reasonably expect to sell will fit into just one of your
  * standard shipping boxes.
  */
-class PackageOnePackage extends PackagingStrategy {
+class PackageOnePackage implements PackagingStrategy {
 
   /**
    * Implements PackagingStrategy::getDescription().
@@ -27,7 +26,7 @@ class PackageOnePackage extends PackagingStrategy {
   public function getDescription() {
     return t("The 'One package' strategy is an extremely simple packaging strategy which puts all products into one package. This strategy doesn't care about product weights or any other metric - everything goes into one package, period.
 
-This strategy is useful if you always ship your orders in one box.  Generally, that means your items are small and light enough so that any quantity you can reasonably expect to sell will fit in one of your standard shipping boxes.");
+This strategy is useful if you always ship your orders in one box.  Generally, that means your items are small and light enough so that any quantity you can reasonably expect to sell will fit into just one of your standard shipping boxes.");
   }
 
   /**
