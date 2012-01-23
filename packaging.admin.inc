@@ -62,7 +62,7 @@ function packaging_admin_settings($form, &$form_state) {
     '#options'       => $options,
     '#default_value' => variable_get('packaging_strategy', reset($options)),
     '#ajax' => array(
-      'wrapper' => 'packaging-strategy-description-fieldset-wrapper',
+      'wrapper'  => 'packaging-strategy-description-fieldset-wrapper',
       'callback' => 'packaging_strategy_select_callback',
     ),
   );
@@ -70,8 +70,8 @@ function packaging_admin_settings($form, &$form_state) {
   // This fieldset serves as a container for the a description of the selected
   // packaging strategy.
   $form['packaging_strategy_description'] = array(
-    '#type' => 'fieldset',
-    '#title' => 'Strategy description',
+    '#type'   => 'fieldset',
+    '#title'  => 'Strategy description',
     // These provide the wrapper referred to in #ajax['wrapper'] above.
     '#prefix' => '<div id="packaging-strategy-description-fieldset-wrapper">',
     '#suffix' => '</div>',
@@ -139,14 +139,12 @@ function packaging_admin_settings($form, &$form_state) {
     ),
   );
 
-
-
   // Register additional submit handler.
   $form['#submit'][] = 'packaging_admin_settings_submit';
 
   return system_settings_form($form);
-
 }
+
 /**
  * Callback for the select element.
  *
@@ -155,7 +153,6 @@ function packaging_admin_settings($form, &$form_state) {
 function packaging_strategy_select_callback($form, $form_state) {
   return $form['packaging_strategy_description'];
 }
-
 
 /**
  * Element validation handler for packaging_admin_settings() form.

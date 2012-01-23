@@ -43,10 +43,10 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $this->pass(t('Testing PackageAllInOne strategy'));
 
     $context = new PackagingContext();
-    $context->setMaximumPackageWeight(15);
-    $context->setDefaultWeightUnits('LB');
-    $context->setWeightMarkupFunction('packaging_weight_markup');
-    $context->setStrategy(new PackageAllInOne());
+    $context->setMaximumPackageWeight(15)
+            ->setDefaultWeightUnits('LB')
+            ->setWeightMarkupFunction('packaging_weight_markup')
+            ->setStrategy(new PackageAllInOne());
 
     $packages = $context->packageProducts($this->products);
 

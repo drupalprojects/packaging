@@ -136,6 +136,7 @@ class PackagingProduct {
    */
   public function setQuantity($quantity) {
     $this->quantity = $quantity;
+    return $this;
   }
 
   /**
@@ -150,6 +151,7 @@ class PackagingProduct {
    */
   public function setPackageQuantity($pkg_qty) {
     $this->quantity = $pkg_qty;
+    return $this;
   }
 
   /**
@@ -164,6 +166,7 @@ class PackagingProduct {
    */
   public function setPrice($price) {
     $this->price = $price;
+    return $this;
   }
 
   /**
@@ -178,6 +181,7 @@ class PackagingProduct {
    */
   public function setWeight($weight) {
     $this->weight = $weight;
+    return $this;
   }
 
   /**
@@ -192,6 +196,7 @@ class PackagingProduct {
    */
   public function setWeightUnits($weight_units) {
     $this->weight_units = $weight_units;
+    return $this;
   }
 
   /**
@@ -220,6 +225,7 @@ class PackagingProduct {
 
     // Re-compute volume
     $this->volume = $this->length * $this->width * $this->height;
+    return $this;
   }
 
   /**
@@ -235,6 +241,7 @@ class PackagingProduct {
    */
   public function setVolume($volume) {
     return $this->volume = $volume;
+    return $this;
   }
 
   /**
@@ -261,6 +268,7 @@ class PackagingProduct {
     // Re-compute volume with new units. Volume is always expressed in terms of
     // the cube of the product length units.
     $this->volume = $this->length * $this->width * $this->height;
+    return $this;
   }
 
 }

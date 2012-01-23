@@ -2,18 +2,21 @@
 
 /**
  * @file
+ * Defines utility class to represent a physical container.
  */
 
 
 /**
  * Represents a physical container that may hold products.
  *
- * $package object defined by this class contains the following members:
+ * The object defined by this class contains the following members:
  *   - quantity:     Number of items in package.
  *   - price:        Value (sales price, in store currency) of items in package.
- *   - weight:       Actual weight of items in package, in store weight units.
- *   - weight_units: Taken from packaging_weight_units variable. (?)
- *   - shipweight:   Computed weight of package, including markup.
+ *   - weight:       Weight of items in package, in units of weight_units.
+ *   - weight_units: Units of weight measure.
+ *   - volume:       Volume of items in package, in units of length_units^3.
+ *   - length_units: Units of length measure.
+ *   - shipweight:   Computed weight of package, including weight markup.
  */
 class PackagingPackage {
 
@@ -44,6 +47,7 @@ class PackagingPackage {
    */
   public function setQuantity($quantity) {
     $this->quantity = $quantity;
+    return $this;
   }
 
   /**
@@ -58,6 +62,7 @@ class PackagingPackage {
    */
   public function setPrice($price) {
     $this->price = $price;
+    return $this;
   }
 
   /**
@@ -72,6 +77,7 @@ class PackagingPackage {
    */
   public function setWeight($weight) {
     $this->weight = $weight;
+    return $this;
   }
 
   /**
@@ -86,6 +92,7 @@ class PackagingPackage {
    */
   public function setWeightUnits($weight_units) {
     $this->weight_units = $weight_units;
+    return $this;
   }
 
   /**
@@ -100,6 +107,7 @@ class PackagingPackage {
    */
   public function setShipWeight($shipweight) {
     $this->shipweight = $shipweight;
+    return $this;
   }
 
   /**
@@ -114,6 +122,7 @@ class PackagingPackage {
    */
   public function setVolume($volume) {
     $this->volume = $volume;
+    return $this;
   }
 
   /**
@@ -128,6 +137,7 @@ class PackagingPackage {
    */
   public function setLengthUnits($length_units) {
     $this->length_units = $length_units;
+    return $this;
   }
 
   /**
@@ -144,6 +154,7 @@ class PackagingPackage {
     $this->products = $products;
     // Re-compute package totals.
     $this->updateTotals();
+    return $this;
   }
 
   /**

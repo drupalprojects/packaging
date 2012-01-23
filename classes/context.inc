@@ -47,6 +47,7 @@ class PackagingContext {
    */
   public function setStrategy(PackagingStrategy $strategy) {
     $this->strategy = $strategy;
+    return $this;
   }
 
   /**
@@ -61,6 +62,7 @@ class PackagingContext {
    */
   public function setMaximumPackageWeight($maximum_weight = self::UNLIMITED_PACKAGE_WEIGHT) {
     $this->maximum_weight = $maximum_weight;
+    return $this;
   }
 
   /**
@@ -110,6 +112,7 @@ class PackagingContext {
   public function setDefaultWeightUnits($weight_units = 'LB') {
     $this->weight_units = $weight_units;
     // @todo: Need to modify $maximum_weight to agree with the new units.
+    return $this;
   }
 
   /**
@@ -126,6 +129,7 @@ class PackagingContext {
    */
   public function setWeightMarkupFunction($weight_markup_function) {
     $this->weight_markup_function = $weight_markup_function;
+    return $this;
   }
 
   /**
@@ -133,6 +137,7 @@ class PackagingContext {
    */
   public function setMaximumPackageVolume($maximum_volume = self::UNLIMITED_PACKAGE_VOLUME) {
     $this->maximum_volume = $maximum_volume;
+    return $this;
   }
 
   /**
@@ -182,6 +187,7 @@ class PackagingContext {
   public function setDefaultLengthUnits($length_units = 'LB') {
     $this->length_units = $length_units;
     // @todo: Need to modify $maximum_volume to agree with the new units.
+    return $this;
   }
 
   /**
