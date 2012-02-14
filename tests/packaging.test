@@ -82,6 +82,18 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
       t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
     );
 
+    // Calculate maximum possible number of boxes.
+    $maximum_number_of_packages = 0;
+    foreach ($this->products as $product) {
+      $maximum_number_of_packages += $product->getQuantity();
+    }
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages <= $maximum_number_of_packages),
+      t('Number of packages made %made is less than or equal to maximum possible number %max.', array('%made' => $actual_number_of_packages, '%max' => $maximum_number_of_packages))
+    );
+
     // Test different origin addresses
 
     // Test different destination addresses
@@ -141,6 +153,18 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
       t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
     );
 
+    // Calculate maximum possible number of boxes.
+    $maximum_number_of_packages = 0;
+    foreach ($this->products as $product) {
+      $maximum_number_of_packages += $product->getQuantity();
+    }
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages <= $maximum_number_of_packages),
+      t('Number of packages made %made is less than or equal to maximum possible number %max.', array('%made' => $actual_number_of_packages, '%max' => $maximum_number_of_packages))
+    );
+
     // Test different origin addresses
 
     // Test different destination addresses
@@ -198,6 +222,18 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $this->assertTrue(
       ($actual_number_of_packages >= $minimum_number_of_packages),
       t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
+    );
+
+    // Calculate maximum possible number of boxes.
+    $maximum_number_of_packages = 0;
+    foreach ($this->products as $product) {
+      $maximum_number_of_packages += $product->getQuantity();
+    }
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages <= $maximum_number_of_packages),
+      t('Number of packages made %made is less than or equal to maximum possible number %max.', array('%made' => $actual_number_of_packages, '%max' => $maximum_number_of_packages))
     );
 
     // Test different origin addresses
@@ -355,6 +391,18 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $this->assertTrue(
       ($actual_number_of_packages >= $minimum_number_of_packages),
       t('Number of packages made %made is greater than or equal to minimum possible number %min.', array('%made' => $actual_number_of_packages, '%min' => $minimum_number_of_packages))
+    );
+
+    // Calculate maximum possible number of boxes.
+    $maximum_number_of_packages = 0;
+    foreach ($this->products as $product) {
+      $maximum_number_of_packages += $product->getQuantity();
+    }
+
+    // Test to see if the strategy produced the expected number of boxes.
+    $this->assertTrue(
+      ($actual_number_of_packages <= $maximum_number_of_packages),
+      t('Number of packages made %made is less than or equal to maximum possible number %max.', array('%made' => $actual_number_of_packages, '%max' => $maximum_number_of_packages))
     );
 
     // Test different origin addresses

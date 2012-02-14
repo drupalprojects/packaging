@@ -68,6 +68,9 @@ This strategy will always return the same results if given the same set of produ
     $package  = new PackagingPackage();
     $package->setWeightUnits($context->getDefaultWeightUnits());
 
+    // Save the package to the array.
+    $packages[] = $package;
+
     // Loop over products.
     foreach ($products as $product) {
       // Get product weight.
@@ -106,27 +109,23 @@ This strategy will always return the same results if given the same set of produ
           // Markup weight of current package.
           $package->setShipWeight(packaging_weight_markup($package->getWeight()));
 
-          // Save current package to head of the array.
-          array_unshift($packages, $package);
-
           // Put this item into a new package.
           $package = new PackagingPackage();
           $package->setQuantity(1);
           $package->setPrice($product->getPrice());
           $package->setWeight($product_weight);
           $package->setWeightUnits($context->getDefaultWeightUnits());
+
+          // Save new package to head of the array.
+          array_unshift($packages, $package);
         }
       }
     }
 
     // No more products left to package.
     // Take care of the partially-filled package we were working on.
-
-    // First, markup weight of partially-filled package.
+    // Markup weight of partially-filled package.
     $package->setShipWeight(packaging_weight_markup($package->getWeight()));
-
-    // Second, save the partially-filled package to the array and exit.
-    array_unshift($packages, $package);
 
     return $packages;
   }

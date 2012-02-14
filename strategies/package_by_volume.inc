@@ -82,6 +82,9 @@ This strategy will always return the same results if given the same set of produ
     $package->setWeightUnits($context->getDefaultWeightUnits());
     $package->setLengthUnits($context->getDefaultLengthUnits());
 
+    // Save new package to the array.
+    $packages[] = $package;
+
     // Loop over products.
     foreach ($products as $product) {
       // Get product volume.
@@ -121,9 +124,6 @@ This strategy will always return the same results if given the same set of produ
           // Markup weight of current package.
           $package->setShipWeight(packaging_weight_markup($package->getWeight()));
 
-          // Save current package to the array.
-          $packages[] = $package;
-
           // Put this item into a new package.
           $package = new PackagingPackage();
           $package->setQuantity(1);
@@ -132,17 +132,17 @@ This strategy will always return the same results if given the same set of produ
           $package->setWeightUnits($context->getDefaultWeightUnits());
           $package->setVolume($product_volume);
           $package->setLengthUnits($context->getDefaultLengthUnits());
+
+          // Save new package to the array.
+          $packages[] = $package;
         }
       }
     }
 
     // No more products left to package.
     // Take care of the partially-filled package we were working on.
-    // First, markup weight of partially-filled package.
+    // Markup weight of partially-filled package.
     $package->setShipWeight(packaging_weight_markup($package->getWeight()));
-
-    // Second, save the partially-filled package to the array and exit.
-    $packages[] = $package;
 
     return $packages;
   }
