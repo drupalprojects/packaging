@@ -1,0 +1,8 @@
+name: Packaging
+type: module
+description: Algorithms for breaking orders into packages for shipment.
+core: 8.x
+dependencies:
+  - ctools
+
+configure: packaging.settings

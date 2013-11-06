@@ -1,0 +1,6 @@
+packaging.settings:
+  path: '/admin/settings/packaging'
+  defaults:
+    _form: 'Drupal\packaging\Form\PackagingSettingsForm'
+  requirements:
+    _permission: 'configure packaging'

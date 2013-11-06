@@ -1,8 +1,0 @@
-name = Packaging module hook and plugin tests
-description = Support module for Packaging tests
-dependencies[] = packaging
-core = 7.x
-hidden = TRUE
-
-; Packaging strategies
-files[] = strategies/package_custom_strategy.inc

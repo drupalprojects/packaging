@@ -214,13 +214,10 @@ function packaging_menu() {
   $items = array();
 
   $items['admin/settings/packaging'] = array(
-    'title'            => 'Packaging settings',
-    'description'      => 'Configure operation of the Packaging module.',
-    'page callback'    => 'drupal_get_form',
-    'page arguments'   => array('packaging_admin_settings'),
-    'access arguments' => array('configure packaging'),
-    'type'             => MENU_LOCAL_TASK,
-    'file'             => 'packaging.admin.inc',
+    'title'       => 'Packaging settings',
+    'description' => 'Configure operation of the Packaging module.',
+    'type'        => MENU_LOCAL_TASK,
+    'route_name'  => 'packaging.settings',
   );
 
   $items['packaging'] = array(
