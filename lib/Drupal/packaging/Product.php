@@ -2,13 +2,16 @@
 
 /**
  * @file
- * Class definition for products.
+ * Contains \Drupal\packaging\Product.
  */
+
+namespace Drupal\packaging;
+
 
 /**
  * Represents a physical product that may be put into packages.
  */
-class PackagingProduct {
+class Product {
 
   protected $origin;
   protected $destination;
@@ -33,18 +36,18 @@ class PackagingProduct {
 
 
   /**
-   * Constructs a new PackagingProduct object given a Drupal Commerce Product
+   * Constructs a new Product object given a Drupal Commerce Product
    * entity.
    */
   public static function constructFromCommerceProduct($product) {
 
-    $construct = new PackagingProduct();
+    $construct = new Product();
 
     return $construct;
   }
 
   /**
-   * Constructs a new PackagingProduct object given an array of Drupal Commerce
+   * Constructs a new Product object given an array of Drupal Commerce
    * Product entities.
    */
   public static function constructFromCommerceProductMultiple(array $products) {
@@ -59,12 +62,12 @@ class PackagingProduct {
 
 
   /**
-   * Constructs a new PackagingProduct object given an Ubercart Product object.
+   * Constructs a new Product object given an Ubercart Product object.
    */
   public static function constructFromUbercartProduct($product) {
 
     // New instance.
-    $construct = new PackagingProduct();
+    $construct = new Product();
 
     // Copy properties into this instance.
     $construct->quantity     = $product->qty;
@@ -81,8 +84,8 @@ class PackagingProduct {
     $construct->length_units = $product->length_units;
 
     // Copy any designated properties from the Ubercart product type to the
-    // PackagingProduct type.
-    foreach (PackagingContext::getKeys() as $key) {
+    // Product type.
+    foreach (Context::getKeys() as $key) {
       if (property_exists($product, $key)) {
         $construct->$key = $product->$key;
       }

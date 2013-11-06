@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Defines utility class to represent a physical container.
+ * Contains \Drupal\packaging\Package.
  */
+
+namespace Drupal\packaging;
 
 
 /**
@@ -18,7 +20,7 @@
  *   - length_units: Units of length measure.
  *   - shipweight:   Computed weight of package, including weight markup.
  */
-class PackagingPackage {
+class Package {
 
   protected $quantity     = 0;
   protected $price        = 0.0;
@@ -29,7 +31,7 @@ class PackagingPackage {
   protected $shipweight   = 0.0;
 
   /**
-   * Array holding references to the PackagingProduct objects stored
+   * Array holding references to the Product objects stored
    * in this package.
    */
   protected $products = array();
@@ -176,7 +178,7 @@ class PackagingPackage {
   /**
    * Adds a product to the package.
    */
-  public function addProduct(PackagingProduct $product) {
+  public function addProduct(Product $product) {
     $this->products[] = $product;
 
     // Update the package values to include this new product.

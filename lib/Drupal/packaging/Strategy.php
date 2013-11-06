@@ -2,8 +2,10 @@
 
 /**
  * @file
- * Class definition for packaging strategies.
+ * Contains \Drupal\packaging\Strategy.
  */
+
+namespace Drupal\packaging;
 
 
 /**
@@ -13,22 +15,22 @@
  * subclasses wishing to provide their own packaging strategy. Defines
  * some utility routines.
  */
-interface PackagingStrategy {
+interface Strategy {
 
   /**
    * Abstract function for packaging strategies.
    *
    * Subclasses must implement this function to provide a strategy.
    *
-   * @param PackagingContext $context
+   * @param Context $context
    *   An object holding extrinsic state information for a strategy instance.
    * @param $products
-   *   An array of nodes of type PackagingProduct.
+   *   An array of nodes of type Product.
    *
    * @return
    *   An array of Package objects, each containing one or more of the products.
    */
-  public function packageProducts(PackagingContext $context, array $products);
+  public function packageProducts(Context $context, array $products);
 
   /**
    * Describes the packaging algorithm implemented by subclasses.

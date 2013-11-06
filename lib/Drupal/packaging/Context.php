@@ -2,14 +2,16 @@
 
 /**
  * @file
- * Class definition for packaging context.
+ * Contains \Drupal\packaging\Context.
  */
+
+namespace Drupal\packaging;
 
 
 /**
  * Contains context information needed for packaging strategies.
  */
-class PackagingContext {
+class Context {
 
   /** Constant used in internal implementation to indicate unlimited weight */
   const UNLIMITED_PACKAGE_WEIGHT = -1;
@@ -45,7 +47,7 @@ class PackagingContext {
   /**
    * Mutator for strategy property.
    */
-  public function setStrategy(PackagingStrategy $strategy) {
+  public function setStrategy(Strategy $strategy) {
     $this->strategy = $strategy;
     return $this;
   }

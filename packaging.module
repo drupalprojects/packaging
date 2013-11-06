@@ -111,13 +111,13 @@ define('PACKAGING_MM_TO_CM', 0.1);
  * completeness.
  *
  * @param $products
- *   An array of nodes of type PackagingProduct.
+ *   An array of nodes of type Product.
  *
  * @return
- *   An array of PackagingPackage objects, each containing one or more of
+ *   An array of Package objects, each containing one or more of
  *   the products.
  */
-function packaging_package_products(PackagingContext $context, array $products) {
+function packaging_package_products(Context $context, array $products) {
   $packages = array();
 
   // Determine maximum weight of products we can put into one package while
@@ -166,10 +166,10 @@ function packaging_package_products(PackagingContext $context, array $products) 
 //    }
 
   if (module_exists('uc_product')) {
-    $products = PackagingProduct::constructFromUbercartProductMultiple($products);
+    $products = Product::constructFromUbercartProductMultiple($products);
   }
   elseif (module_exists('commerce_product')) {
-    $products = PackagingProduct::constructFromCommerceProductMultiple($products);
+    $products = Product::constructFromCommerceProductMultiple($products);
   }
 
   $packages = $context->packageProducts($products);
@@ -371,8 +371,8 @@ function packaging_get_instance($id) {
     }
     $instances[$id] = new $class();
 
-    // Check that the plugin class implements PackagingStrategy.
-    if (!($instances[$id] instanceof PackagingStrategy)) {
+    // Check that the plugin class implements Strategy.
+    if (!($instances[$id] instanceof Strategy)) {
       $instances[$id] = NULL;
     }
   }
