@@ -2,13 +2,22 @@
 
 /**
  * @file
- * Packaging Unit tests.
+ * Contains \Drupal\ip2country\Tests\PackagingUnitTest.
+ *
+ * @author Tim Rohaly.    <http://drupal.org/user/202830>
  */
+
+namespace Drupal\packaging\Tests;
+
+use Drupal\simpletest\UnitTestBase;
+use Drupal\packaging\Context;
+use Drupal\packaging\Product;
+
 
 /**
  * SimpleTests for Packaging.
  */
-class PackagingUnitTestCase extends DrupalUnitTestCase {
+class PackagingUnitTest extends UnitTestBase {
 
   protected $products = array();
 
@@ -21,7 +30,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   }
 
   /**
-   * Overrides DrupalUnitTestCase::setUp().
+   * Overrides UnitTestBase::setUp().
    */
   function setUp() {
     parent::setUp();
@@ -42,7 +51,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAllInOne() {
     $this->pass(t('Testing PackageAllInOne strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15)
             ->setDefaultWeightUnits('LB')
             ->setWeightMarkupFunction('packaging_weight_markup')
@@ -113,7 +122,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageLastFit() {
     $this->pass(t('Testing PackageLastFit strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -184,7 +193,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageNextFit() {
     $this->pass(t('Testing PackageNextFit strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -253,7 +262,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageEachInOwn() {
     $this->pass(t('Testing PackageEachInOwn strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -303,7 +312,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageOnePackage() {
     $this->pass(t('Testing PackageOnePackage strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -352,7 +361,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageByVolume() {
     $this->pass(t('Testing PackageByVolume strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageVolume(50);
     $context->setDefaultLengthUnits('IN');
     $context->setDefaultWeightUnits('LB');
@@ -422,7 +431,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAverageWeight() {
     $this->pass(t('Testing PackageAverageWeight strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -467,7 +476,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   function testPackageAverageVolume() {
     $this->pass(t('Testing PackageAverageVolume strategy'));
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageVolume(50);
     $context->setDefaultLengthUnits('IN');
     $context->setDefaultWeightUnits('LB');
@@ -517,14 +526,14 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     // We need test products with special keys to test this strategy.
     $keyarray = array('from' => "Sammamish, WA", 'to' => "Baltimore, MD");
 
-    // Designate keys BEFORE we create PackagingProduct objects.
-    PackagingContext::designateKeys(array_keys($keyarray));
+    // Designate keys BEFORE we create Product objects.
+    Context::designateKeys(array_keys($keyarray));
 
     $this->products = $this->createTestProducts($keyarray);
 
     //debug($this->products);
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -562,7 +571,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     // an independent way to calculate the number of packages expected, because
     // that would be a more meaningful test.
 
-    $keynames = PackagingContext::getKeys();
+    $keynames = Context::getKeys();
 
     $hashtable = array();
     foreach ($this->products as $index => $product) {
@@ -592,7 +601,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     // PackageCustomStrategy is defined by the packaging_test module.
     //$strategy = packaging_get_instance('custom');
 
-    $context = new PackagingContext();
+    $context = new Context();
     $context->setMaximumPackageWeight(15);
     $context->setDefaultWeightUnits('LB');
     $context->setWeightMarkupFunction('packaging_weight_markup');
@@ -643,7 +652,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   /**
    * Loads needed include files.
    *
-   * DrupalUnitTestCase::setUp() does NOT install modules, so any files we
+   * UnitTestBase::setUp() does NOT install modules, so any files we
    * require for our tests must be included here.
    */
   function loadIncludes() {
@@ -669,8 +678,8 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   /**
    * Returns a Product object containing aggregate information.
    */
-  function getProductAggregate(PackagingContext $context, array $products) {
-    $product_aggregate = new PackagingProduct();
+  function getProductAggregate(Context $context, array $products) {
+    $product_aggregate = new Product();
     $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     $product_aggregate->setLengthUnits($context->getDefaultLengthUnits());
     foreach ($this->products as $product) {
@@ -686,8 +695,8 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
   /**
    * Returns a Package object containing aggregate information.
    */
-  function getPackageAggregate(PackagingContext $context, array $packages) {
-    $package_aggregate = new PackagingPackage();
+  function getPackageAggregate(Context $context, array $packages) {
+    $package_aggregate = new Package();
     $package_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     $package_aggregate->setLengthUnits($context->getDefaultLengthUnits());
     foreach ($packages as $package) {
@@ -713,7 +722,7 @@ class PackagingUnitTestCase extends DrupalUnitTestCase {
     $products = array();
     $number = mt_rand(5, 10);
     for ($i = 0; $i < $number; $i++) {
-      $products[] = PackagingProduct::constructFromUbercartProduct($this->createProduct($keyarray));
+      $products[] = Product::constructFromUbercartProduct($this->createProduct($keyarray));
     }
     return $products;
   }
