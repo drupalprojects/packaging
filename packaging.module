@@ -236,6 +236,35 @@ function packaging_menu() {
   return $items;
 }
 
+/**
+ * Implements hook_help().
+ */
+function packaging_help($path = 'admin/help#packaging', $arg = NULL) {
+  switch ($path) {
+    case 'admin/help#packaging':
+    case 'admin/help/packaging':
+      //module_load_include('inc', 'packaging', 'packaging.help');
+      return t('This module provides heuristic algorithms for splitting shippable orders into physical packages. The intent is that shipping quotes modules will use these algorithms in lieu of coding their own packaging routines. New algorithms may easily be defined using the plugin architecture of this module.');
+      break;
+
+    case 'admin/settings/packaging':
+      return t('Configuration settings for the Packaging module.');
+      break;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ */
+function packaging_permission() {
+  return array(
+    'configure packaging' => array(
+      'title'       => t('Configure Packaging settings'),
+      'description' => t('Configure packaging strategies and values.'),
+    ),
+  );
+}
+
 
 /******************************************************************************
  * CTools plugin hooks.
@@ -326,7 +355,7 @@ function packaging_packaging_strategy() {
 }
 
 /**
- * Helper function.  Fetches metadata for all strategy plugins.
+ * Helper function. Fetches metadata for all strategy plugins.
  *
  * @param $id
  *   Plugin identifier, as returned by hook_packaging_strategy().
@@ -341,7 +370,7 @@ function packaging_get_strategy($id) {
 }
 
 /**
- * Helper function.  Fetches metadata for all strategy plugins.
+ * Helper function. Fetches metadata for all strategy plugins.
  *
  * @return
  *   An array of arrays with information about all available packaging
