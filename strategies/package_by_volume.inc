@@ -148,7 +148,7 @@ This strategy will always return the same results if given the same set of produ
   }
 
   /**
-   * Sort callback. Sorts array of PackagingProduct objects by weight from high to low.
+   * Sorts array of PackagingProduct objects by weight from high to low.
    */
   protected static function compareVolumes(PackagingProduct $a, PackagingProduct $b) {
     $volume_a = $a->getVolume();
