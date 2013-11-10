@@ -224,7 +224,7 @@ function packaging_menu() {
   );
 
   $items['packaging'] = array(
-    'title' => 'Store',
+    'title' => 'Packaging',
     'description' => 'Administer',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('print_info'),

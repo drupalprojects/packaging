@@ -91,9 +91,9 @@ minimum necessary steps:
 
 1) Create a new module for your strategy.
 2) Module must implement two hooks:
-   a) hook_test_ctools_plugin_directory() - Indicates where your module's
-      plugings can be found. Typically this would be in a subdirectory under
-      your module's main directory.
+   a) hook_ctools_plugin_directory() - Indicates where your module's plugins
+      can be found. Typically this would be in a subdirectory under your
+      module's main directory.
    b) hook_packaging_strategy() - Declares the strategy name(s) and handler
       class(es) for any packaging strategies implemented by your module.
 3) Create an include file in your plugin directory which contains a class
