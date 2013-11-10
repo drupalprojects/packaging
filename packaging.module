@@ -118,6 +118,8 @@ define('PACKAGING_MM_TO_CM', 0.1);
  *   the products.
  */
 function packaging_package_products(Context $context, array $products) {
+  $packaging_config = Drupal::config('packaging.settings');
+
   $packages = array();
 
   // Determine maximum weight of products we can put into one package while
@@ -138,7 +140,7 @@ function packaging_package_products(Context $context, array $products) {
   // Convert $products_max_weight (which is defined in LB units) into store
   // default weight units so we can perform all calculations and return all
   // results in store default weight units.
-  //$products_max_weight = $products_max_weight * packaging_weight_conversion($context->getDefaultWeightUnits(), variable_get('packaging_weight_units', 'LB'));
+  //$products_max_weight = $products_max_weight * packaging_weight_conversion($context->getDefaultWeightUnits(), $packaging_config->get('weight_units'));
 
   $context->setMaximumPackageWeight($products_max_weight);
 
@@ -187,8 +189,9 @@ function packaging_package_products(Context $context, array $products) {
  *   Shipping weight after markup.
  */
 function packaging_weight_markup($weight) {
-  $markup = trim(variable_get('uc_fedex_weight_markup', '0'));
-  $type   = variable_get('uc_fedex_weight_markup_type', 'percentage');
+  $packaging_config = Drupal::config('fedex.settings');
+  $markup = trim($packaging_config->get('weight_markup', '0'));
+  $type   = $packaging_config->get('weight_markup_type', 'percentage');
 
   if (is_numeric($markup)) {
     switch ($type) {
@@ -385,7 +388,8 @@ function packaging_get_instance($id) {
  */
 function packaging_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = variable_get('packaging_weight_units', 'lb');
+    $packaging_config = Drupal::config('packaging.settings');
+    $to_units = $packaging_config->get('weight_units');
   }
   $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
@@ -401,7 +405,8 @@ function packaging_weight_conversion($from_units, $to_units = NULL) {
  */
 function packaging_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $to_units = variable_get('packaging_length_units', 'in');
+    $packaging_config = Drupal::config('packaging.settings');
+    $to_units = $packaging_config->get('length_units');
   }
   $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
   if (defined($constant) && ($conversion = constant($constant)) > 0) {
