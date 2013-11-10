@@ -2,34 +2,44 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy.
+ *
  * Test of custom Packaging strategy. Always creates 23 boxes.
  */
 
+namespace Drupal\packaging_test\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_custom_strategy",
+ *   label = @Translation("Creates 23 packages", context = "Packaging")
+ * )
+ */
 
 /**
  * Always creates 23 boxes, regardless of number of products in order.
  *
- * This is a clone of PackageAverageWeight, with the number of packages
- * hardwired to 23.
+ * This is a clone of \Drupal\packaging\Plugin\Strategy\PackageAverageWeight,
+ * with the number of packages hardwired to 23.
  */
-class PackageCustomStrategy implements PackagingStrategy {
+class PackageCustomStrategy implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("This strategy always creates 23 boxes, regardless of number of products in order. Its only use is to provide a custom strategy for automated testing of the Packaging module.");
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
     // Creates twenty-three packages, independent of number of products.
     $num_packages = 23;
 
     // Create product aggregate for averaging.
-    $product_aggregate = new PackagingProduct();
+    $product_aggregate = new Product();
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the store
@@ -46,7 +56,7 @@ class PackageCustomStrategy implements PackagingStrategy {
     $packages = array();
     for ($id = 0; $id < $num_packages; $id++) {
       // Create package.
-      $package = new PackagingPackage();
+      $package = new Package();
 
       // Set package values to the average values.
       $package->setQuantity($average_quantity);
