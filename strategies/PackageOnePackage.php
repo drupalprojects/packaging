@@ -2,9 +2,19 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageOnePackage.
+ *
  * Packaging strategy. Packages all products in one package.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_onepackage",
+ *   label = @Translation("One package", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts all products into one package, with no restrictions.
@@ -18,10 +28,10 @@
  * quantity you can reasonably expect to sell will fit into just one of your
  * standard shipping boxes.
  */
-class PackageOnePackage implements PackagingStrategy {
+class PackageOnePackage implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("The 'One package' strategy is an extremely simple packaging strategy which puts all products into one package. This strategy doesn't care about product weights or any other metric - everything goes into one package, period.
@@ -30,12 +40,12 @@ This strategy is useful if you always ship your orders in one box.  Generally, t
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
 
     // Create first and only package.
-    $package = new PackagingPackage();
+    $package = new Package();
 
     // Loop over products.
     foreach ($products as $product) {

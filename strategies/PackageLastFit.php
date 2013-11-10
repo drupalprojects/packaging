@@ -2,9 +2,19 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageLastFit.
+ *
  * Packaging strategy. Packages all products in one package, break by weight.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_lastfit",
+ *   label = @Translation("All-in-one (last fit)", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts all products into packages, subject only to package maximum weight.
@@ -30,10 +40,10 @@
  * This strategy will always return the same results if given the same set of
  * products.
  */
-class PackageLastFit implements PackagingStrategy {
+class PackageLastFit implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("The 'All-in-one' strategy is a general-purpose packaging strategy which attempts to put all products into one package, subject only to a maximum weight. When the maximum weight is exceeded, a new package will be created.
@@ -46,9 +56,9 @@ This strategy will always return the same results if given the same set of produ
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
 
     // Loop over products.
     foreach ($products as $product) {
@@ -65,7 +75,7 @@ This strategy will always return the same results if given the same set of produ
 
     // Create first package.
     $packages = array();
-    $package  = new PackagingPackage();
+    $package  = new Package();
     $package->setWeightUnits($context->getDefaultWeightUnits());
 
     // Save the package to the array.
@@ -110,7 +120,7 @@ This strategy will always return the same results if given the same set of produ
           $package->setShipWeight(packaging_weight_markup($package->getWeight()));
 
           // Put this item into a new package.
-          $package = new PackagingPackage();
+          $package = new Package();
           $package->setQuantity(1);
           $package->setPrice($product->getPrice());
           $package->setWeight($product_weight);
@@ -131,9 +141,9 @@ This strategy will always return the same results if given the same set of produ
   }
 
   /**
-   * Sort callback. Sorts array of PackagingProduct objects by weight from high to low.
+   * Sort callback. Sorts array of Product objects by weight from high to low.
    */
-  protected static function compareWeights(PackagingProduct $a, PackagingProduct $b) {
+  protected static function compareWeights(Product $a, Product $b) {
     $weight_a = $a->getWeight();
     $weight_b = $b->getWeight();
 

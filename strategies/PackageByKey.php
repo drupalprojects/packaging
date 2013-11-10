@@ -2,17 +2,27 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageByKey.
+ *
  * Packaging strategy. Puts products with identical keys into same package.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_bykey",
+ *   label = @Translation("By key", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts products with identical keys into same package.
  *
  * The "By key" strategy uses certain keys set for each product to determine
  * how to package an order. Product keys are simply properties of the
- * PackagingProduct object which have been designated as keys by invoking
- * PackagingContext::designateKeys(array $keys). You may pass an array of
+ * Product object which have been designated as keys by invoking
+ * Context::designateKeys(array $keys). You may pass an array of
  * property names to that method to identify which properties are keys.
  *
  * Once the keys have been designated, this strategy will look for products
@@ -33,21 +43,21 @@
  * when you have perisable products, for instance, that may need to be shipped
  * together via an Express method, or with special handling.
  */
-class PackageByKey implements PackagingStrategy {
+class PackageByKey implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
-    return t("The 'By key' strategy uses certain keys set for each product to determine how to package an order. Product keys are simply properties of the PackagingProduct object which have been designated as keys by invoking PackagingContext::designateKeys(array \$keys). You may pass an array of property names to that method to identify which properties are keys.
+    return t("The 'By key' strategy uses certain keys set for each product to determine how to package an order. Product keys are simply properties of the Product object which have been designated as keys by invoking Context::designateKeys(array \$keys). You may pass an array of property names to that method to identify which properties are keys.
 
 Once the keys have been designated, this strategy will look for products which have a common set of keys and put those products in one package.");
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
 
     // Weight units are set on a per-product basis, so convert all products
     // to default weight units before performing any calculations.
@@ -57,7 +67,7 @@ Once the keys have been designated, this strategy will look for products which h
     }
 
     $hashtable = array();
-    $keynames = PackagingContext::getKeys();
+    $keynames = Context::getKeys();
 
 //debug($products);
     // Loop over products to build hashtable. Each entry in the hashtable
@@ -80,12 +90,12 @@ Once the keys have been designated, this strategy will look for products which h
 
 //debug($hashtable);
 
-    // Loop over hashtable entries to build PackagingPackage objects.
+    // Loop over hashtable entries to build Package objects.
     // Each hashtable entry corresponds to one package.
     $packages = array();
     foreach ($hashtable as $table_entry) {
       // Create package object.
-      $package  = new PackagingPackage();
+      $package  = new Package();
       $package->setWeightUnits($context->getDefaultWeightUnits());
 
       // Loop over product indexes stored in the hashtable.

@@ -2,9 +2,19 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageAverageVolume.
+ *
  * Packaging strategy. Creates identical packages based on product averages.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_averagevolume",
+ *   label = @Translation("Average volume", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts all products into packages, subject only to package maximum volume.
@@ -14,22 +24,22 @@
  * volume. The resulting packages are assigned identical weights, prices, etc.
  * so as to simulate uniform distribution of products amongst the packages.
  */
-class PackageAverageVolume implements PackagingStrategy {
+class PackageAverageVolume implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("The 'Average volume' strategy computes the number of packages needed by dividing the total volume of all products by the maximum allowed package volume. The resulting packages are assigned identical weights, prices, etc. so as to simulate uniform distribution of products amongst the packages.");
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
 
     // Create product aggregate for averaging.
-    $product_aggregate = new PackagingProduct();
+    $product_aggregate = new Product();
     $product_aggregate->setWeightUnits($context->getDefaultWeightUnits());
     $product_aggregate->setLengthUnits($context->getDefaultLengthUnits());
 
@@ -55,7 +65,7 @@ class PackageAverageVolume implements PackagingStrategy {
     }
 
     // Calculate the number of packages we will need.
-    if ($context->getMaximumPackageVolume() == PackagingContext::UNLIMITED_PACKAGE_VOLUME) {
+    if ($context->getMaximumPackageVolume() == Context::UNLIMITED_PACKAGE_VOLUME) {
       $num_packages = 1;
     }
     else {
@@ -70,7 +80,7 @@ class PackageAverageVolume implements PackagingStrategy {
     $packages = array();
     for ($i = 0; $i < $num_packages; $i++) {
       // Create package.
-      $package = new PackagingPackage();
+      $package = new Package();
 
       // Should use "Worst fit" strategy here to allocate products
       // to packages as evenly as possible.

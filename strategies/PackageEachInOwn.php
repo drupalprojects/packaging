@@ -2,9 +2,19 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageEachInOwn.
+ *
  * Packaging strategy. Packages each product line item in its own package.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_eachinown",
+ *   label = @Translation("Each in own", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts each product line item into its own package, subject only to package
@@ -23,10 +33,10 @@
  * quantity property, this strategy will create a new package. Likewise, a new
  * package will be created for each individual product line item.
  */
-class PackageEachInOwn implements PackagingStrategy {
+class PackageEachInOwn implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("The 'Each-in-own' strategy is a general-purpose packaging strategy which puts each product line item into its own package. This strategy is intended for products which come pre-packaged in shippable cases. The product's package quantity property restricts the number in each package, so if more than that number are in the order, multiple packages will be sent. This is useful for products that come in cases, for example, since exceeding the case quantity means you will have to ship more than one case.
@@ -35,9 +45,9 @@ Products are added to packages one-by-one, in the order they are passed to the s
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
     // Each product line item in its own package, subject only to pkg_qty.
 
     // Loop over products.
@@ -56,7 +66,7 @@ Products are added to packages one-by-one, in the order they are passed to the s
         // These are full packages.
         for ($i = 0; $i < $num_of_pkgs; $i++) {
           // Create full packages.
-          $package = new PackagingPackage();
+          $package = new Package();
           $product_quantity = $product->getPackageQuantity();
           $package->setQuantity($product_quantity);
           $package->setPrice($product->getPrice() * $product_quantity);
@@ -75,7 +85,7 @@ Products are added to packages one-by-one, in the order they are passed to the s
       $remaining_qty = $product->getQuantity() % $product->getPackageQuantity();
       if ($remaining_qty) {
         // Create partially-full packages.
-        $package = new PackagingPackage();
+        $package = new Package();
         $package->setQuantity($remaining_qty);
         $package->setPrice($product->getPrice() * $remaining_qty);
         $package->setWeight($item_weight * $remaining_qty);

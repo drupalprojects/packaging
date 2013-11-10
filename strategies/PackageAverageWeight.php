@@ -2,9 +2,19 @@
 
 /**
  * @file
+ * Contains \Drupal\packaging\Plugin\Strategy\PackageAverageWeight.
+ *
  * Packaging strategy. Creates identical packages based on product averages.
  */
 
+namespace Drupal\packaging\Plugin\Strategy;
+
+/**
+ * @Strategy(
+ *   id = "packaging_averageweight",
+ *   label = @Translation("Average weight", context = "Packaging")
+ * )
+ */
 
 /**
  * Puts all products into packages, subject only to package maximum weight.
@@ -14,22 +24,22 @@
  * weight. The resulting packages are assigned identical weights, prices, etc.
  * so as to simulate uniform distribution of products amongst the packages.
  */
-class PackageAverageWeight implements PackagingStrategy {
+class PackageAverageWeight implements Strategy {
 
   /**
-   * Implements PackagingStrategy::getDescription().
+   * Implements Strategy::getDescription().
    */
   public function getDescription() {
     return t("The 'Average weight' strategy computes the number of packages needed by dividing the total weight of all products by the maximum allowed package weight. The resulting packages are assigned identical weights, prices, etc.  so as to simulate uniform distribution of products amongst the packages.");
   }
 
   /**
-   * Implements PackagingStrategy::packageProducts().
+   * Implements Strategy::packageProducts().
    */
-  public function packageProducts(PackagingContext $context, array $products) {
+  public function packageProducts(Context $context, array $products) {
 
     // Create product aggregate for averaging.
-    $product_aggregate = new PackagingProduct();
+    $product_aggregate = new Product();
     foreach ($products as $product) {
       // Get item weight. Weight units are set on a per-product basis, so we
       // convert as necessary in order to perform all calculations in the
@@ -40,7 +50,7 @@ class PackageAverageWeight implements PackagingStrategy {
     }
 
     // Calculate the number of packages we will need.
-    if ($context->getMaximumPackageWeight() == PackagingContext::UNLIMITED_PACKAGE_WEIGHT) {
+    if ($context->getMaximumPackageWeight() == Context::UNLIMITED_PACKAGE_WEIGHT) {
       $num_packages = 1;
     }
     else {
@@ -54,7 +64,7 @@ class PackageAverageWeight implements PackagingStrategy {
     $packages = array();
     for ($i = 0; $i < $num_packages; $i++) {
       // Create package.
-      $package = new PackagingPackage();
+      $package = new Package();
 
       // Set package values to the average values.
 
