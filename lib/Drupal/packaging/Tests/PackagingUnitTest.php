@@ -49,12 +49,12 @@ class PackagingUnitTest extends DrupalUnitTestBase {
   function setUp() {
     parent::setUp();
 
-    // Load all files needed for these Unit tests.
-//    $this->loadIncludes();
+    // For now, we're still dependent upon a few module funtions.
+    drupal_load('module', 'packaging');
 
     // Create test products for packaging.
     $this->products = $this->createTestProducts();
-    debug($this->products);
+    //debug($this->products);
   }
 
   /**
