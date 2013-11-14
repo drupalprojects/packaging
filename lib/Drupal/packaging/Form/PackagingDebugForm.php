@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\packaging\Form\PackagingSettingsForm.
+ * Contains \Drupal\packaging\Form\PackagingDebugForm.
  */
 
 namespace Drupal\packaging\Form;
@@ -48,7 +48,7 @@ class PackagingDebugForm extends ConfigFormBase {
     $operations = packaging_get_strategies();
     $options = array();
     foreach ($operations as $id => $operation) {
-      $options[$id] = $operation['admin_id'];
+      $options[$id] = $operation['admin_label'];
     }
 
     $form['packaging_strategy'] = array(

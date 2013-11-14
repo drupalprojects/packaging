@@ -9,18 +9,22 @@
 
 namespace Drupal\packaging_test\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_custom_strategy",
- *   label = @Translation("Creates 23 packages", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Always creates 23 boxes, regardless of number of products in order.
  *
  * This is a clone of \Drupal\packaging\Plugin\Strategy\PackageAverageWeight,
  * with the number of packages hardwired to 23.
+ *
+ * @Strategy(
+ *   id = "packaging_custom_strategy",
+ *   admin_label = @Translation("Creates 23 packages", context = "Packaging")
+ * )
  */
 class PackageCustomStrategy implements Strategy {
 
