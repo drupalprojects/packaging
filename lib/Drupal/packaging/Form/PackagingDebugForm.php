@@ -50,12 +50,14 @@ class PackagingDebugForm extends ConfigFormBase {
     foreach ($operations as $id => $operation) {
       $options[$id] = $operation['admin_label'];
     }
+    $default_value = $packaging_config->get('strategy');
+    $default_value = isset($default_value) ?  $default_value : reset($options);
 
     $form['packaging_strategy'] = array(
       '#type' => 'select',
       '#title' => t('Please choose Strategy'),
       '#options' => $options,
-      '#default_value' => $packaging_config->get('packaging_strategy', reset($options)),
+      '#default_value' => $default_value,
     );
 
     //$form['hooks'] = array(
@@ -93,11 +95,18 @@ class PackagingDebugForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, array &$form_state) {
     $values = $form_state['values'];
-    $operation = $form_state['values']['packaging_strategy'];
+
+    $packaging_config = $this->configFactory->get('packaging.settings');
+
+    $packaging_config
+      ->set('strategy', $values['packaging_strategy'])
+      ->save();
+
+    $operation = $values['packaging_strategy'];
     if ($instance = packaging_get_instance($operation)) {
       $context = new Context();
       $context->setStrategy($instance);
-      drupal_set_message("Invoked packageProducts()<pre>" . var_export($context->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
+      drupal_set_message("<pre>Invoked packageProducts()<br>" . var_export($context->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
     }
     parent::submitForm($form, $form_state);
   }

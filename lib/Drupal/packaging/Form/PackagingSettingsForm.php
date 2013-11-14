@@ -8,6 +8,11 @@
 namespace Drupal\packaging\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 
 /**
@@ -74,18 +79,20 @@ class PackagingSettingsForm extends ConfigFormBase {
     foreach ($operations as $id => $operation) {
       $options[$id] = $operation['admin_label'];
     }
+    $default_value = $packaging_config->get('strategy');
+    $default_value = isset($default_value) ?  $default_value : reset($options);
 
     // Form to select packaging strategy.
     $form['packaging_strategy'] = array(
       '#type'          => 'select',
       '#title'         => t('Packaging strategy'),
       '#description'   => t('Select the packaging strategy that is most appropriate to the types of products you sell.'),
-      '#element_validate' => array('packaging_strategy_element_validate'),
+      '#element_validate' => array(array($this, 'strategy_element_validate')),
       '#options'       => $options,
-      '#default_value' => $packaging_config->get('packaging_strategy', reset($options)),
+      '#default_value' => $default_value,
       '#ajax' => array(
         'wrapper'  => 'packaging-strategy-description-fieldset-wrapper',
-        'callback' => 'packaging_strategy_select_callback',
+        'callback' => array($this, 'strategy_select_callback'),
       ),
     );
 
@@ -104,7 +111,7 @@ class PackagingSettingsForm extends ConfigFormBase {
       $strategy = $form_state['values']['packaging_strategy'];
     }
     else {
-      $strategy = $packaging_config->get('packaging_strategy', reset($options));
+      $strategy = $packaging_config->get('strategy', reset($options));
     }
 
     if ($instance = packaging_get_instance($strategy)) {
@@ -178,14 +185,14 @@ class PackagingSettingsForm extends ConfigFormBase {
    *
    * This just selects and returns the questions_fieldset.
    */
-  public function packaging_strategy_select_callback($form, $form_state) {
+  public function strategy_select_callback($form, $form_state) {
     return $form['packaging_strategy_description'];
   }
 
   /**
    * Element validation handler for packaging_admin_settings() form.
    */
-  public function packaging_strategy_element_validate($element, &$form_state) {
+  public function strategy_element_validate($element, &$form_state) {
     $operation = $element['#value'];
     $instance = packaging_get_instance($operation);
     if (!isset($instance)) {
@@ -206,7 +213,8 @@ class PackagingSettingsForm extends ConfigFormBase {
         'max_weight' => $values['packaging_max_weight'],
         'weight_units' => $values['packaging_weight_units'],
         'max_volume' => $values['packaging_max_volume'],
-        'volume_units' => $values['packaging_volume_units'],
+        'length_units' => $values['packaging_length_units'],
+        'strategy' => $values['packaging_strategy'],
       ))
       ->save();
 

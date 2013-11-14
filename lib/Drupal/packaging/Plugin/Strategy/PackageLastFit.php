@@ -75,7 +75,7 @@ This strategy will always return the same results if given the same set of produ
 
     // Sort products from heaviest to lightest to make packaging deterministic.
     // Products have to all have the same weight units for a valid comparison!
-    usort($products, 'PackageLastFit::compareWeights');
+    usort($products, '\Drupal\packaging\Plugin\Strategy\PackageLastFit::compareWeights');
 
     // Create first package.
     $packages = array();
