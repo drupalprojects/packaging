@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_nextfit",
- *   label = @Translation("All-in-one (next fit)", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts all products into packages, subject only to package maximum weight.
@@ -39,6 +38,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  *
  * This strategy will always return the same results if given the same set of
  * products.
+ *
+ * @Strategy(
+ *   id = "packaging_nextfit",
+ *   admin_label = @Translation("All-in-one (next fit)", context = "Packaging")
+ * )
  */
 class PackageNextFit implements Strategy {
 

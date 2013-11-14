@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_eachinown",
- *   label = @Translation("Each in own", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts each product line item into its own package, subject only to package
@@ -32,6 +31,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  * the strategy method. If the product quantity will exceed the product package
  * quantity property, this strategy will create a new package. Likewise, a new
  * package will be created for each individual product line item.
+ *
+ * @Strategy(
+ *   id = "packaging_eachinown",
+ *   admin_label = @Translation("Each in own", context = "Packaging")
+ * )
  */
 class PackageEachInOwn implements Strategy {
 

@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_byvolume",
- *   label = @Translation("By volume", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts all products into packages, subject only to package maximum volume.
@@ -41,6 +40,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  *
  * This strategy will always return the same results if given the same set of
  * products.
+ *
+ * @Strategy(
+ *   id = "packaging_byvolume",
+ *   admin_label = @Translation("By volume", context = "Packaging")
+ * )
  */
 class PackageByVolume implements Strategy {
 

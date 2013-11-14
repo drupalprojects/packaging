@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_averageweight",
- *   label = @Translation("Average weight", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts all products into packages, subject only to package maximum weight.
@@ -23,6 +22,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  * dividing the total weight of all products by the maximum allowed package
  * weight. The resulting packages are assigned identical weights, prices, etc.
  * so as to simulate uniform distribution of products amongst the packages.
+ *
+ * @Strategy(
+ *   id = "packaging_averageweight",
+ *   admin_label = @Translation("Average weight", context = "Packaging")
+ * )
  */
 class PackageAverageWeight implements Strategy {
 

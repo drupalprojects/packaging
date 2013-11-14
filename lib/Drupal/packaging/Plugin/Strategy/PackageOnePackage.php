@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_onepackage",
- *   label = @Translation("One package", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts all products into one package, with no restrictions.
@@ -27,6 +26,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  * Generally, that means your items are small and light enough so that any
  * quantity you can reasonably expect to sell will fit into just one of your
  * standard shipping boxes.
+ *
+ * @Strategy(
+ *   id = "packaging_onepackage",
+ *   admin_label = @Translation("One package", context = "Packaging")
+ * )
  */
 class PackageOnePackage implements Strategy {
 

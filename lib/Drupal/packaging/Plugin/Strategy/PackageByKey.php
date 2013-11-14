@@ -9,12 +9,11 @@
 
 namespace Drupal\packaging\Plugin\Strategy;
 
-/**
- * @Strategy(
- *   id = "packaging_bykey",
- *   label = @Translation("By key", context = "Packaging")
- * )
- */
+use Drupal\packaging\Strategy;
+use Drupal\packaging\Product;
+use Drupal\packaging\Package;
+use Drupal\packaging\Context;
+
 
 /**
  * Puts products with identical keys into same package.
@@ -42,6 +41,11 @@ namespace Drupal\packaging\Plugin\Strategy;
  * package all products with the same term in the same package. This is useful
  * when you have perisable products, for instance, that may need to be shipped
  * together via an Express method, or with special handling.
+ *
+ * @Strategy(
+ *   id = "packaging_bykey",
+ *   admin_label = @Translation("By key", context = "Packaging")
+ * )
  */
 class PackageByKey implements Strategy {
 

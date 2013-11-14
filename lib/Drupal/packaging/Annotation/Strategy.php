@@ -9,6 +9,7 @@ namespace Drupal\packaging\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
+
 /**
  * Defines a Strategy annotation object.
  *
