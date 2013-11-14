@@ -72,7 +72,7 @@ class PackagingSettingsForm extends ConfigFormBase {
     $operations = packaging_get_strategies();
     $options = array();
     foreach ($operations as $id => $operation) {
-      $options[$id] = $operation['title'];
+      $options[$id] = $operation['admin_label'];
     }
 
     // Form to select packaging strategy.
@@ -160,8 +160,8 @@ class PackagingSettingsForm extends ConfigFormBase {
       ),
     );
 
-    // Register additional submit handler.
-    $form['#submit'][] = 'packaging_admin_settings_submit';
+//    // Register additional submit handler.
+//    $form['#submit'][] = 'packaging_admin_settings_submit';
 
     return parent::buildForm($form, $form_state);
   }
@@ -221,55 +221,4 @@ class PackagingSettingsForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
   }
 
-  /**
-   * Menu callback for /packaging path. This is used only for testing during
-   * development, and will be removed before a release.
-   */
-  public function print_info() {
-
-    $operations = packaging_get_strategies();
-    $options = array();
-    foreach ($operations as $id => $operation) {
-      $options[$id] = $operation['title'];
-    }
-
-    $form['strategy'] = array(
-      '#type' => 'select',
-      '#title' => t('Please choose Strategy'),
-      '#options' => $options,
-      '#default_value' => $packaging_config->get('strategy', reset($options)),
-    );
-
-    //$form['hooks'] = array(
-    //  '#markup' => '<pre>' . ctools_plugin_api_get_hook('views', 'views') . '</pre>',
-    //);
-
-    $form['operations'] = array(
-      '#markup' => '<pre>' . var_export($operations, TRUE) . '</pre>',
-    );
-
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Select strategy'),
-    );
-
-    // Register additional submit handler.
-    $form['#submit'][] = 'print_info_submit';
-
-    return system_settings_form($form);
-  }
-
-  /**
-   * Submit handler for /packaging path. This is used only for testing during
-   * development, and will be removed before a release.
-   */
-  public function print_info_submit($form, &$form_state) {
-    $operation = $form_state['values']['strategy'];
-    if ($instance = packaging_get_instance($operation)) {
-      $context = new Context();
-      $context->setStrategy($instance);
-      drupal_set_message("Invoked packageProducts()<pre>" . var_export($context->packageProducts(array(new Product(), new Product())), TRUE) . "</pre>");
-    }
-  }
 }

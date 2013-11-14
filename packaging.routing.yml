@@ -4,3 +4,10 @@ packaging.settings:
     _form: 'Drupal\packaging\Form\PackagingSettingsForm'
   requirements:
     _permission: 'configure packaging'
+
+packaging.debug:
+  path: '/packaging'
+  defaults:
+    _form: 'Drupal\packaging\Form\PackagingDebugForm'
+  requirements:
+    _permission: 'configure packaging'

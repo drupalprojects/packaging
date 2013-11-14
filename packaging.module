@@ -224,13 +224,10 @@ function packaging_menu() {
   );
 
   $items['packaging'] = array(
-    'title' => 'Packaging',
+    'title'       => 'Packaging',
     'description' => 'Administer',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('print_info'),
-    'access callback' => TRUE,
-    'type'             => MENU_NORMAL_ITEM,
-    'file'             => 'packaging.admin.inc',
+    'type'        => MENU_NORMAL_ITEM,
+    'route_name'  => 'packaging.debug',
   );
 
   return $items;
