@@ -2,22 +2,36 @@
 
 /**
  * @file
- * Contains \Drupal\ip2country\Tests\PackagingUnitTest.
+ * Contains \Drupal\packaging\Tests\PackagingUnitTest.
  *
  * @author Tim Rohaly.    <http://drupal.org/user/202830>
  */
 
 namespace Drupal\packaging\Tests;
 
-use Drupal\simpletest\UnitTestBase;
-use Drupal\packaging\Context;
-use Drupal\packaging\Product;
+use Drupal\simpletest\DrupalUnitTestBase;
 
+use Drupal\packaging\Context;
+use Drupal\packaging\Package;
+use Drupal\packaging\Product;
+use Drupal\packaging\Strategy;
+
+use Drupal\packaging\Plugin\Strategy\PackageAllInOne;
+use Drupal\packaging\Plugin\Strategy\PackageAverageWeight;
+use Drupal\packaging\Plugin\Strategy\PackageAverageVolume;
+use Drupal\packaging\Plugin\Strategy\PackageByKey;
+use Drupal\packaging\Plugin\Strategy\PackageByVolume;
+use Drupal\packaging\Plugin\Strategy\PackageLastFit;
+use Drupal\packaging\Plugin\Strategy\PackageNextFit;
+use Drupal\packaging\Plugin\Strategy\PackageEachInOwn;
+use Drupal\packaging\Plugin\Strategy\PackageOnePackage;
+
+use Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy;
 
 /**
  * SimpleTests for Packaging.
  */
-class PackagingUnitTest extends UnitTestBase {
+class PackagingUnitTest extends DrupalUnitTestBase {
 
   protected $products = array();
 
@@ -36,11 +50,11 @@ class PackagingUnitTest extends UnitTestBase {
     parent::setUp();
 
     // Load all files needed for these Unit tests.
-    $this->loadIncludes();
+//    $this->loadIncludes();
 
     // Create test products for packaging.
     $this->products = $this->createTestProducts();
-    //debug($this->products);
+    debug($this->products);
   }
 
   /**
@@ -648,32 +662,6 @@ class PackagingUnitTest extends UnitTestBase {
    * Utility Functions                                                        *
    ****************************************************************************/
 
-
-  /**
-   * Loads needed include files.
-   *
-   * UnitTestBase::setUp() does NOT install modules, so any files we
-   * require for our tests must be included here.
-   */
-  function loadIncludes() {
-    drupal_load('module', 'packaging');
-    module_load_include('inc', 'packaging', 'classes/package');
-    module_load_include('inc', 'packaging', 'classes/product');
-    module_load_include('inc', 'packaging', 'classes/context');
-    module_load_include('inc', 'packaging', 'classes/strategy');
-    module_load_include('inc', 'packaging', 'strategies/package_each_in_own');
-    module_load_include('inc', 'packaging', 'strategies/package_all_in_one');
-    module_load_include('inc', 'packaging', 'strategies/package_last_fit');
-    module_load_include('inc', 'packaging', 'strategies/package_next_fit');
-    module_load_include('inc', 'packaging', 'strategies/package_one_package');
-    module_load_include('inc', 'packaging', 'strategies/package_average_volume');
-    module_load_include('inc', 'packaging', 'strategies/package_by_volume');
-    module_load_include('inc', 'packaging', 'strategies/package_average_weight');
-    module_load_include('inc', 'packaging', 'strategies/package_by_key');
-    drupal_load('module', 'packaging_test');
-    module_load_include('inc', 'packaging_test', 'strategies/package_custom_strategy');
-    //drupal_load('module', 'ctools');
-  }
 
   /**
    * Returns a Product object containing aggregate information.
