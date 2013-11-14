@@ -262,33 +262,6 @@ function packaging_permission() {
   );
 }
 
-
-/******************************************************************************
- * CTools plugin hooks.
- ******************************************************************************/
-
-
-/**
- * Implements hook_ctools_plugin_type().
- */
-function packaging_ctools_plugin_type() {
-  return array(
-    'strategy' => array(
-      // If FALSE, will ignore hook_MODULE_PLUGIN() and generate automatic hook.
-      'use hooks' => TRUE,
-    ),
-  );
-}
-
-/**
- * Implements hook_ctools_plugin_directory().
- */
-function packaging_ctools_plugin_directory($module, $plugin) {
-  if (($module == 'packaging') && ($plugin == 'strategy')) {
-    return 'strategies';
-  }
-}
-
 /**
  * Implements hook_MODULE_PLUGIN().
  */
@@ -362,8 +335,8 @@ function packaging_packaging_strategy() {
  *   strategies.
  */
 function packaging_get_strategy($id) {
-  ctools_include('plugins');
-  return ctools_get_plugins('packaging', 'strategy', $id);
+  $packaging_type_manager = \Drupal::service('plugin.manager.packaging');
+  return $packaging_type_manager->getDefinition($id);
 }
 
 /**
@@ -374,8 +347,8 @@ function packaging_get_strategy($id) {
  *   strategies.
  */
 function packaging_get_strategies() {
-  ctools_include('plugins');
-  return ctools_get_plugins('packaging', 'strategy');
+  $packaging_type_manager = \Drupal::service('plugin.manager.packaging');
+  return $packaging_type_manager->getDefinitions();
 }
 
 /**
@@ -390,20 +363,17 @@ function packaging_get_strategies() {
 function packaging_get_instance($id) {
   // Cache strategy instances.
   $instances = &drupal_static(__FUNCTION__);
+  $packaging_type_manager = \Drupal::service('plugin.manager.packaging');
 
   if (!isset($instances[$id])) {
     // Not cached yet, so find and put in cache.
     $plugin = packaging_get_strategy($id);
-    $class = ctools_plugin_get_class($plugin, 'handler');
-    if (!isset($class)) {
-      return NULL;
-    }
-    $instances[$id] = new $class();
+    $instances[$id] = $packaging_type_manager->createInstance($id);
 
     // Check that the plugin class implements Strategy.
-    if (!($instances[$id] instanceof Strategy)) {
-      $instances[$id] = NULL;
-    }
+    //if (!($instances[$id] instanceof \Drupal\lib\packaging\Strategy)) {
+    //  $instances[$id] = NULL;
+    //}
   }
 
   return $instances[$id];
