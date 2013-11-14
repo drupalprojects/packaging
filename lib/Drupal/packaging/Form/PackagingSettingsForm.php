@@ -8,11 +8,11 @@
 namespace Drupal\packaging\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
-use Drupal\packaging\Strategy;
-use Drupal\packaging\Product;
-use Drupal\packaging\Package;
-use Drupal\packaging\Context;
 
+use Drupal\packaging\Context;
+use Drupal\packaging\Package;
+use Drupal\packaging\Product;
+use Drupal\packaging\Strategy;
 
 
 /**
@@ -105,7 +105,6 @@ class PackagingSettingsForm extends ConfigFormBase {
       '#prefix' => '<div id="packaging-strategy-description-fieldset-wrapper">',
       '#suffix' => '</div>',
     );
-
 
     if (!empty($form_state['values']['packaging_strategy'])) {
       $strategy = $form_state['values']['packaging_strategy'];
