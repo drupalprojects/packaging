@@ -46,7 +46,7 @@ package_next_fit.inc
   Specifically, this method properly handles varying product weight units,
   makes better use of available weight, allows configuration of maximum allowed
   weight. The results are independent of the order of products in the cart.
-  
+
 package_each_in_own.inc
   Corresponds to the Ubercart "each-in-own" packaging method, for backwards
   compatibility.
@@ -69,10 +69,9 @@ package_average_volume.inc
 
 package_by_key.inc
   Products with common "keys" are all put into the same package. Keys are any
-  user-defined property attached to the PackagingProduct object. One example
-  would be to attach taxonomy terms to the products and designate the term as
-  a key. Then all products with the same set of terms would be put into the
-  same package.
+  user-defined property attached to the Product object. One example would be to
+  attach taxonomy terms to the products and designate the term as a key. Then
+  all products with the same set of terms would be put into the same package.
 
 ALL the default strategies work with multiple origin addresses and multiple
 destination addresses. ALL the default strategies may be applied to the entire
@@ -86,21 +85,42 @@ Defining your own strategy
 ==========================
 An example of a module that creates a new packaging strategy,
 packaging_test.module, may be found in the tests subdirectory. Use this
-working example as a guide when writing your own module.  Here are the
-minimum necessary steps:
+working example as a guide when writing your own module.
 
+Creating your own Strategy plugin is very similar to creating a Block in
+Drupal 8. Should you encounter difficulties, reading any of the documentation
+on how to create Blocks should be very helpful.
+
+Here are the minimum necessary steps:
 1) Create a new module for your strategy.
-2) Module must implement two hooks:
-   a) hook_ctools_plugin_directory() - Indicates where your module's plugins
-      can be found. Typically this would be in a subdirectory under your
-      module's main directory.
-   b) hook_packaging_strategy() - Declares the strategy name(s) and handler
-      class(es) for any packaging strategies implemented by your module.
-3) Create an include file in your plugin directory which contains a class
-   implementing PackagingStrategy.
-4) Implement the packageProducts() and getDescription() methods in your class.
-5) Modules that uses strategies (e.g. Ubercart or Commerce) will now be able
+2) Create a new class file for your strategy and put it in the subdirectory
+   lib/Drupal/<yourmodule>/Plugin/Strategy under your module's base directory.
+   This class must implement \Drupal\lib\packaging\Strategy.
+3) Add a @Strategy annotation to allow your class to be discovered. An
+   annotation is a comment in the doxygen comment block for your class. The
+   @Strategy annotation for the hypothetical class "MyStrategy" in the module
+   "mymodule" would look something like this:
+   /**
+    * @Strategy(
+    *   id = 'mymodule_mystrategy',
+    *   admin_label = @Translation("My own Strategy class", context = "Packaging")
+    * )
+    */
+    class MyStrategy implements Strategy {
+      ...
+    }
+3) Implement the Strategy::packageProducts() and Strategy::getDescription()
+   methods in your class.
+4) Modules that uses strategies (e.g. Ubercart or Commerce) will now be able
    to use your strategy in the same way as built-in strategies.
+5) I strongly suggest that if you implement your own strategy you also create
+   your own test cases, using as examples the test cases for the built-in
+   packaging methods. Test cases will ensure that your strategy does what you
+   think it should do.
+
+Again, the packaging_test module is simple, working example which demonstrates
+how do this. The packaging module itself comes with 9 built-in strategies
+that also serve as examples.
 
 
 Troubleshooting
