@@ -46,7 +46,7 @@ package_next_fit.inc
   Specifically, this method properly handles varying product weight units,
   makes better use of available weight, allows configuration of maximum allowed
   weight. The results are independent of the order of products in the cart.
-  
+
 package_each_in_own.inc
   Corresponds to the Ubercart "each-in-own" packaging method, for backwards
   compatibility.
