@@ -87,12 +87,12 @@ class PackagingSettingsForm extends ConfigFormBase {
       '#type'          => 'select',
       '#title'         => t('Packaging strategy'),
       '#description'   => t('Select the packaging strategy that is most appropriate to the types of products you sell.'),
-      '#element_validate' => array(array($this, 'strategy_element_validate')),
+      '#element_validate' => array(array($this, 'validateStrategy')),
       '#options'       => $options,
       '#default_value' => $default_value,
       '#ajax' => array(
         'wrapper'  => 'packaging-strategy-description-fieldset-wrapper',
-        'callback' => array($this, 'strategy_select_callback'),
+        'callback' => array($this, 'strategyDescriptionCallback'),
       ),
     );
 
@@ -182,20 +182,21 @@ class PackagingSettingsForm extends ConfigFormBase {
   /**
    * Callback for the select element.
    *
-   * This just selects and returns the questions_fieldset.
+   * This callback selects and returns the packaging_strategy_description
+   * fieldset.
    */
-  public function strategy_select_callback($form, $form_state) {
+  public function strategyDescriptionCallback($form, $form_state) {
     return $form['packaging_strategy_description'];
   }
 
   /**
-   * Element validation handler for packaging_admin_settings() form.
+   * Element validation handler for packaging_strategy select element.
    */
-  public function strategy_element_validate($element, &$form_state) {
+  public function validateStrategy($element, &$form_state) {
     $operation = $element['#value'];
     $instance = packaging_get_instance($operation);
     if (!isset($instance)) {
-      form_error($element, t('The %operation strategy could not be located. Please contact the site administrator.', array('%operation' => $operation)));
+      \Drupal::formBuilder()->setError($element, t('The %operation strategy could not be located. Please contact the site administrator.', array('%operation' => $operation)));
     }
   }
 
