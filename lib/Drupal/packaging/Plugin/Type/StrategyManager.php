@@ -17,19 +17,20 @@ use Drupal\Core\StringTranslation\TranslationInterface;
  * Manages discovery and instantiation of Strategy plugins.
  */
 class StrategyManager extends DefaultPluginManager {
-   /**
-    * Constructs a StrategyManager object.
-    *
-    * @param \Traversable $namespaces
-    *   An object that implements \Traversable which contains the root paths
-   *   keyed by the corresponding namespace to look for plugin implementations.
+  /**
+   * Constructs a StrategyManager object.
+   *
+   * @param \Traversable $namespaces
+   *   An object that implements \Traversable which contains the root paths
+   *   keyed by the corresponding namespace to look for plugin
+   *   implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
    * @param \Drupal\Core\Language\LanguageManager $language_manager
    *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
-    */
+   */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
     parent::__construct('Plugin/Strategy', $namespaces, 'Drupal\packaging\Annotation\Strategy');
     $this->alterInfo($module_handler, 'strategy_info');
