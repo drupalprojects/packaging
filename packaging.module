@@ -118,7 +118,7 @@ define('PACKAGING_MM_TO_CM', 0.1);
  *   the products.
  */
 function packaging_package_products(Context $context, array $products) {
-  $packaging_config = Drupal::config('packaging.settings');
+  $packaging_config = \Drupal::config('packaging.settings');
 
   $packages = array();
 
@@ -189,7 +189,7 @@ function packaging_package_products(Context $context, array $products) {
  *   Shipping weight after markup.
  */
 function packaging_weight_markup($weight) {
-  $packaging_config = Drupal::config('fedex.settings');
+  $packaging_config = \Drupal::config('fedex.settings');
   $markup = trim($packaging_config->get('weight_markup', '0'));
   $type   = $packaging_config->get('weight_markup_type', 'percentage');
 
@@ -384,7 +384,7 @@ function packaging_get_instance($id) {
  */
 function packaging_weight_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $packaging_config = Drupal::config('packaging.settings');
+    $packaging_config = \Drupal::config('packaging.settings');
     $to_units = $packaging_config->get('weight_units');
   }
   $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
@@ -401,7 +401,7 @@ function packaging_weight_conversion($from_units, $to_units = NULL) {
  */
 function packaging_length_conversion($from_units, $to_units = NULL) {
   if (is_null($to_units)) {
-    $packaging_config = Drupal::config('packaging.settings');
+    $packaging_config = \Drupal::config('packaging.settings');
     $to_units = $packaging_config->get('length_units');
   }
   $constant = 'PACKAGING_' . strtoupper($from_units) . '_TO_' . strtoupper($to_units);
