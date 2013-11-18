@@ -27,16 +27,16 @@ use Drupal\packaging\Context;
  * Products are added to packages one-by-one, in order of volume with the
  * largest products added first. If adding a product will exceed the package
  * maximum weight, this strategy looks for available space in any
- * previously-created packages and attempts to add the product to one of those.
- * If the product won't fit into any existing packages, a new package is
- * created.
+ * previously-created packages and attempts to add the product to one of
+ * those. If the product won't fit into any existing packages, a new package
+ * is created.
  *
  * If your product weights are small compared to your maximum package weight
  * this strategy will approximate an optimal packing. However, no attempt is
  * made to optimize packing, so the number of packages returned by this
- * strategy is not guaranteed to be the minimum possible number. This strategy
- * mimics how a human would put products into packages, which is also not
- * guaranteed to be optimal, but is what will occur in practice.
+ * strategy is not guaranteed to be the minimum possible number. This
+ * strategy mimics how a human would put products into packages, which is
+ * also not guaranteed to be optimal, but is what will occur in practice.
  *
  * This strategy will always return the same results if given the same set of
  * products.
@@ -52,9 +52,9 @@ class PackageByVolume implements Strategy {
    * Implements Strategy::getDescription().
    */
   public function getDescription() {
-    return t("The 'By volume' is the equivalent of the 'All-in-one' strategy, except product and package volume is used instead of product and package weight.  'By volume' is a general-purpose packaging strategy which attempts to put all products into one package, subject only to a maximum volume. When the maximum volume is exceeded, a new package will be created.
+    return t("The 'By volume' is the equivalent of the 'All-in-one' strategy, except product and package volume is used instead of product and package weight. 'By volume' is a general-purpose packaging strategy which attempts to put all products into one package, subject only to a maximum volume. When the maximum volume is exceeded, a new package will be created.
 
-Products are added to packages one-by-one, in order of volume with the largest products added first. If adding a product will exceed the package maximum weight, this strategy looks for available space in any previously-created packages and attempts to add the product to one of those.  If the product won't fit into any existing packages, a new package is created.
+Products are added to packages one-by-one, in order of volume with the largest products added first. If adding a product will exceed the package maximum weight, this strategy looks for available space in any previously-created packages and attempts to add the product to one of those. If the product won't fit into any existing packages, a new package is created.
 
 If your product weights are small compared to your maximum package weight this strategy will approximate an optimal packing. However, no attempt is made to optimize packing, so the number of packages returned by this strategy is not guaranteed to be the minimum possible number. This strategy mimics how a human would put products into packages, which is also not guaranteed to be optimal, but is what will occur in practice.
 
@@ -86,8 +86,9 @@ This strategy will always return the same results if given the same set of produ
       $product->setWeightUnits($context->getDefaultWeightUnits());
     }
 
-    // Sort products from heaviest to lightest to make packaging deterministic.
-    // Products have to all have the same weight units for a valid comparison!
+    // Sort products from heaviest to lightest to make packaging
+    // deterministic. Products have to all have the same weight units for
+    // a valid comparison!
     usort($products, '\Drupal\packaging\Plugin\Strategy\PackageByVolume::compareVolumes');
 
     // Create first package.

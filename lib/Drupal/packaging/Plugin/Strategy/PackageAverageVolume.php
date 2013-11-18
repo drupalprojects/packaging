@@ -20,8 +20,9 @@ use Drupal\packaging\Context;
  *
  * The "Average volume" strategy computes the number of packages needed by
  * dividing the total volume of all products by the maximum allowed package
- * volume. The resulting packages are assigned identical weights, prices, etc.
- * so as to simulate uniform distribution of products amongst the packages.
+ * volume. The resulting packages are assigned identical weights, prices,
+ * etc.  so as to simulate uniform distribution of products amongst the
+ * packages.
  *
  * @Strategy(
  *   id = "packaging_averagevolume",
@@ -56,8 +57,8 @@ class PackageAverageVolume implements Strategy {
         $dimension *= packaging_length_conversion($product->getLengthUnits(), $context->getDefaultLengthUnits());
       }
       // Do this before we set dimensions!!
-      // setDimensions() should (but currently doesn't) rescale all dimensions
-      // automatically.
+      // setDimensions() should (but currently doesn't) rescale all
+      // dimensions automatically.
       $product->setLengthUnits($context->getDefaultLengthUnits());
       $product->setDimensions($dimensions);
 

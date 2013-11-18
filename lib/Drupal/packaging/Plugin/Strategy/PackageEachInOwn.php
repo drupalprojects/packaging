@@ -20,17 +20,19 @@ use Drupal\packaging\Context;
  * quantity restriction for that line item.
  *
  * The "Each-in-own" strategy is a general-purpose packaging strategy which
- * puts each product line item into its own package. This strategy is intended
- * for products which come pre-packaged in shippable cases. The product's
- * package quantity property restricts the number in each package, so if more
- * than that number are in the order, multiple packages will be sent. This is
- * useful for products that come in cases, for example, since exceeding the
- * case quantity means you will have to ship more than one case.
+ * puts each product line item into its own package. This strategy is
+ * intended for products which come pre-packaged in shippable cases. The
+ * product's package quantity property restricts the number in each package,
+ * so if more than that number are in the order, multiple packages will be
+ * sent. This is useful for products that come in cases, for example, because
+ * exceeding the case quantity means you will have to ship more than one
+ * case.
  *
  * Products are added to packages one-by-one, in the order they are passed to
- * the strategy method. If the product quantity will exceed the product package
- * quantity property, this strategy will create a new package. Likewise, a new
- * package will be created for each individual product line item.
+ * the strategy method. If the product quantity will exceed the product
+ * package quantity property, this strategy will create a new package.
+ * Likewise, a new package will be created for each individual product line
+ * item.
  *
  * @Strategy(
  *   id = "packaging_eachinown",

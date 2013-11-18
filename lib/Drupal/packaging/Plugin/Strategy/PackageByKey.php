@@ -37,10 +37,10 @@ use Drupal\packaging\Context;
  * for two origin addresses and two destination addresses you may get up to
  * four boxes.
  *
- * Another use case is to use a taxonomy term as a key. This strategy will then
- * package all products with the same term in the same package. This is useful
- * when you have perisable products, for instance, that may need to be shipped
- * together via an Express method, or with special handling.
+ * Another use case is to use a taxonomy term as a key. This strategy will
+ * then package all products with the same term in the same package. This is
+ * useful when you have perishable products, for instance, that may need to
+ * be shipped together via an Express method, or with special handling.
  *
  * @Strategy(
  *   id = "packaging_bykey",
@@ -111,9 +111,9 @@ Once the keys have been designated, this strategy will look for products which h
       // Copy designated product keys onto the package object so the package
       // can be queried by key later.
       foreach ($keynames as $key) {
-        // Values for the designated product keys are taken from first product
-        // in the package, but all products in the package will have the same
-        // values at this point.
+        // Values for the designated product keys are taken from first
+        // product in the package, but all products in the package will have
+        // the same values at this point.
         $package->$key = $products[reset($table_entry)]->$key;
       }
 
