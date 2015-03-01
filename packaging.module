@@ -213,29 +213,6 @@ function packaging_weight_markup($weight) {
 }
 
 /**
- * Implements hook_menu().
- */
-function packaging_menu() {
-  $items = array();
-
-  $items['admin/settings/packaging'] = array(
-    'title'       => 'Packaging settings',
-    'description' => 'Configure operation of the Packaging module.',
-    'type'        => MENU_LOCAL_TASK,
-    'route_name'  => 'packaging.settings',
-  );
-
-  $items['packaging'] = array(
-    'title'       => 'Packaging',
-    'description' => 'Administer',
-    'type'        => MENU_NORMAL_ITEM,
-    'route_name'  => 'packaging.debug',
-  );
-
-  return $items;
-}
-
-/**
  * Implements hook_help().
  */
 function packaging_help($route_name = 'help.page.packaging', RouteMatchInterface $route_match) {

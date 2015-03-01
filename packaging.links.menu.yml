@@ -1,0 +1,4 @@
+packaging.settings:
+  title: 'Packaging'
+  description: 'Administer'
+  route_name: packaging.debug

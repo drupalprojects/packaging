@@ -1,0 +1,5 @@
+packaging.settings:
+  title: 'Packaging settings'
+  description: 'Configure operation of the Packaging module.'
+  parent: user.admin_index
+  route_name: packaging.settings
