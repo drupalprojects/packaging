@@ -32,7 +32,7 @@ class StrategyManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Strategy', $namespaces, 'Drupal\packaging\Annotation\Strategy');
+    parent::__construct('Plugin/Strategy', $namespaces, '\Drupal\packaging\Annotation\Strategy');
     $this->alterInfo($module_handler, 'strategy_info');
     $this->setCacheBackend($cache_backend, $language_manager, 'strategy_plugin');
   }

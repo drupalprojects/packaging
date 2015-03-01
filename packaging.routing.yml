@@ -1,13 +1,13 @@
 packaging.settings:
   path: '/admin/settings/packaging'
   defaults:
-    _form: 'Drupal\packaging\Form\PackagingSettingsForm'
+    _form: '\Drupal\packaging\Form\PackagingSettingsForm'
   requirements:
     _permission: 'configure packaging'
 
 packaging.debug:
   path: '/packaging'
   defaults:
-    _form: 'Drupal\packaging\Form\PackagingDebugForm'
+    _form: '\Drupal\packaging\Form\PackagingDebugForm'
   requirements:
     _permission: 'configure packaging'
