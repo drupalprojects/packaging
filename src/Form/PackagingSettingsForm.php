@@ -56,6 +56,12 @@ class PackagingSettingsForm extends ConfigFormBase {
     return 'packaging_admin_settings';
   }
 
+  protected function getEditableConfigNames() {
+    return [
+      'packaging.settings',
+    ];
+  }
+
   /**
    * Implements \Drupal\Core\Form\FormInterface::buildForm().
    *
@@ -71,7 +77,7 @@ class PackagingSettingsForm extends ConfigFormBase {
    * @ingroup forms
    */
   public function buildForm(array $form, array &$form_state) {
-    $packaging_config = $this->configFactory->get('packaging.settings');
+    $packaging_config = $this->config('packaging.settings');
 
     // Use CTools to look for any modules which define packaging strategies.
     $operations = packaging_get_strategies();
@@ -206,7 +212,7 @@ class PackagingSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, array &$form_state) {
     $values = $form_state['values'];
 
-    $packaging_config = $this->configFactory->get('packaging.settings');
+    $packaging_config = $this->config('packaging.settings');
 
     $packaging_config
       ->setData(array(
