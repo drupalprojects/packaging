@@ -50,7 +50,7 @@ class PackagingUnitTest extends KernelTestBase {
     parent::setUp();
 
     // For now, we're still dependent upon a few module funtions.
-    drupal_load('module', 'packaging');
+    \Drupal::ModuleHandler()->load('packaging');
 
     // Create test products for packaging.
     $this->products = $this->createTestProducts();
