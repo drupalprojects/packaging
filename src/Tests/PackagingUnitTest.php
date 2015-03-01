@@ -9,7 +9,7 @@
 
 namespace Drupal\packaging\Tests;
 
-use Drupal\simpletest\DrupalUnitTestBase;
+use Drupal\simpletest\KernelTestBase;
 
 use Drupal\packaging\Context;
 use Drupal\packaging\Package;
@@ -31,7 +31,7 @@ use Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy;
 /**
  * SimpleTests for Packaging.
  */
-class PackagingUnitTest extends DrupalUnitTestBase {
+class PackagingUnitTest extends KernelTestBase {
 
   protected $products = array();
 
