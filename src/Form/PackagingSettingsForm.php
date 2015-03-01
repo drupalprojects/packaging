@@ -8,6 +8,7 @@
 namespace Drupal\packaging\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\packaging\Context;
 use Drupal\packaging\Package;
@@ -50,7 +51,7 @@ use Drupal\packaging\Strategy;
 class PackagingSettingsForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'packaging_admin_settings';
@@ -63,7 +64,7 @@ class PackagingSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    *
    * Builds Form API array containing all elements needed to configure and
    * select packaging strategy. This form may be included on the individual
@@ -76,7 +77,7 @@ class PackagingSettingsForm extends ConfigFormBase {
    * @see packaging_admin_settings_validate()
    * @ingroup forms
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $packaging_config = $this->config('packaging.settings');
 
     // Use CTools to look for any modules which define packaging strategies.
@@ -179,9 +180,9 @@ class PackagingSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     return parent::validateForm($form, $form_state);
   }
 
@@ -191,25 +192,25 @@ class PackagingSettingsForm extends ConfigFormBase {
    * This callback selects and returns the packaging_strategy_description
    * fieldset.
    */
-  public function strategyDescriptionCallback($form, $form_state) {
+  public function strategyDescriptionCallback($form, FormStateInterface $form_state) {
     return $form['packaging_strategy_description'];
   }
 
   /**
    * Element validation handler for packaging_strategy select element.
    */
-  public function validateStrategy($element, &$form_state) {
+  public function validateStrategy($element, FormStateInterface $form_state) {
     $operation = $element['#value'];
     $instance = packaging_get_instance($operation);
     if (!isset($instance)) {
-      \Drupal::formBuilder()->setError($element, t('The %operation strategy could not be located. Please contact the site administrator.', array('%operation' => $operation)));
+      $form_state->setError($element, t('The %operation strategy could not be located. Please contact the site administrator.', array('%operation' => $operation)));
     }
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state['values'];
 
     $packaging_config = $this->config('packaging.settings');

@@ -8,6 +8,7 @@
 namespace Drupal\packaging\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
+use Drupal\Core\Form\FormStateInterface;
 
 use Drupal\packaging\Context;
 use Drupal\packaging\Package;
@@ -28,7 +29,7 @@ use Drupal\packaging\Strategy;
 class PackagingDebugForm extends ConfigFormBase {
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::getFormID().
+   * {@inheritdoc}
    */
   public function getFormID() {
     return 'packaging_debug';
@@ -41,7 +42,7 @@ class PackagingDebugForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::buildForm().
+   * {@inheritdoc}
    *
    * Menu callback for /packaging path. This is used only for testing during
    * development, and will be removed before a release.
@@ -49,7 +50,7 @@ class PackagingDebugForm extends ConfigFormBase {
    * @return
    *   Forms for store administrator to set configuration options.
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $packaging_config = $this->config('packaging.settings');
 
     $operations = packaging_get_strategies();
@@ -88,19 +89,19 @@ class PackagingDebugForm extends ConfigFormBase {
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::validateForm().
+   * {@inheritdoc}
    */
-  public function validateForm(array &$form, array &$form_state) {
+  public function validateForm(array &$form, FormStateInterface $form_state) {
     return parent::validateForm($form, $form_state);
   }
 
   /**
-   * Implements \Drupal\Core\Form\FormInterface::submitForm().
+   * {@inheritdoc}
    *
    * Submit handler for /packaging path. This is used only for testing during
    * development, and will be removed before a release.
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $values = $form_state['values'];
 
     $packaging_config = $this->config('packaging.settings');
