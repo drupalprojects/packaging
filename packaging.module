@@ -6,6 +6,8 @@
  * @author Tim Rohaly.    <http://drupal.org/user/202830>
  */
 
+use Drupal\Core\Routing\RouteMatchInterface;
+
 
 /******************************************************************************
  * Unit conversion constants. Used by the unit conversion functions
@@ -236,15 +238,14 @@ function packaging_menu() {
 /**
  * Implements hook_help().
  */
-function packaging_help($path = 'admin/help#packaging', $arg = NULL) {
-  switch ($path) {
-    case 'admin/help#packaging':
-    case 'admin/help/packaging':
-      //module_load_include('inc', 'packaging', 'packaging.help');
+function packaging_help($route_name = 'help.page.packaging', RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.packaging':
+      //\Drupal::ModuleHandler()->loadInclude('packaging', 'inc', 'packaging.help');
       return t('This module provides heuristic algorithms for splitting shippable orders into physical packages. The intent is that shipping quotes modules will use these algorithms in lieu of coding their own packaging routines. New algorithms may easily be defined using the plugin architecture of this module.');
       break;
 
-    case 'admin/settings/packaging':
+    case 'packaging.settings':
       return t('Configuration settings for the Packaging module.');
       break;
   }
