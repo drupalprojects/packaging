@@ -727,7 +727,7 @@ class PackagingUnitTest extends KernelTestBase {
     $length_units = array('in', 'cm', 'mm');
     $product += array(
       'type' => 'product',
-      'model' => $this->randomName(8),
+      'model' => $this->randomString(8),
       'list_price' => mt_rand(1, 9999),
       'cost' => mt_rand(1, 9999),
       'sell_price' => mt_rand(1, 9999),
