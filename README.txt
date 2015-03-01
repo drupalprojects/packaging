@@ -37,37 +37,40 @@ Abstracting packaging out into its own module accomplishes six things:
 
 Default strategies
 ==================
-package_all_in_one.inc
-package_last_fit.inc
-package_next_fit.inc
-  Roughly corresponds to the Ubercart "all-in-one" packaging method. Code was
+
+All default strategies are in the namespace Drupal\packaging\Plugin\Strategy.
+
+PackageAllInOne.php
+PackageLastFit.php
+PackageNextFit.php
+  Roughly correspond to the Ubercart "all-in-one" packaging method. Code was
   taken from uc_fedex. Unifies the two different implementations provided by
   uc_ups and uc_usps and fixes many bugs with both implementations.
   Specifically, this method properly handles varying product weight units,
   makes better use of available weight, allows configuration of maximum allowed
   weight. The results are independent of the order of products in the cart.
 
-package_each_in_own.inc
+PackageEachInOwn.php
   Corresponds to the Ubercart "each-in-own" packaging method, for backwards
   compatibility.
 
-package_one_package.inc
-  For backwards compatibility with shipping quote methods that didn't do
-  packaging, like uc_weightquote and uc_flatrate.
+PackageOnePackage.php
+  Puts all products into one package. For backwards compatibility with shipping
+  quote methods that didn't do packaging, like uc_weightquote and uc_flatrate.
 
-package_average_weight.inc
-  Number of boxes is determined by order total weight divided by package
+PackageAverageWeight.php
+  Number of packages is determined by order total weight divided by package
   maximum weight.
 
-package_by_volume.inc
+PackageByVolume.php
   Same as the all-in-one strategy, but using volume rather than weight as the
   way to break an order into packages.
 
-package_average_volume.inc
-  Number of boxes is determined by order total volume divided by package
+PackageAverageVolume.php
+  Number of packages is determined by order total volume divided by package
   maximum volume.
 
-package_by_key.inc
+PackageByKey.php
   Products with common "keys" are all put into the same package. Keys are any
   user-defined property attached to the Product object. One example would be to
   attach taxonomy terms to the products and designate the term as a key. Then
