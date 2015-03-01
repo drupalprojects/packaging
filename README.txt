@@ -94,7 +94,7 @@ on how to create Blocks should be very helpful.
 Here are the minimum necessary steps:
 1) Create a new module for your strategy.
 2) Create a new class file for your strategy and put it in the subdirectory
-   lib/Drupal/<yourmodule>/Plugin/Strategy under your module's base directory.
+   src/Plugin/Strategy under your module's base directory.
    This class must implement \Drupal\lib\packaging\Strategy.
 3) Add a @Strategy annotation to allow your class to be discovered. An
    annotation is a comment in the doxygen comment block for your class. The
