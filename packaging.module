@@ -251,18 +251,6 @@ function packaging_help($path = 'admin/help#packaging', $arg = NULL) {
 }
 
 /**
- * Implements hook_permission().
- */
-function packaging_permission() {
-  return array(
-    'configure packaging' => array(
-      'title'       => t('Configure Packaging settings'),
-      'description' => t('Configure packaging strategies and values.'),
-    ),
-  );
-}
-
-/**
  * Implements hook_MODULE_PLUGIN().
  */
 function packaging_packaging_strategy() {
