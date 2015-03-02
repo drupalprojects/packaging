@@ -113,10 +113,8 @@ class PackagingSettingsForm extends ConfigFormBase {
       '#suffix' => '</div>',
     );
 
-    if (!empty($form_state->getValue('packaging_strategy'))) {
-      $strategy = $form_state->getValue('packaging_strategy');
-    }
-    else {
+    $strategy = $form_state->getValue('packaging_strategy');
+    if (empty($strategy)) {
       $strategy = $packaging_config->get('strategy', reset($options));
     }
 
