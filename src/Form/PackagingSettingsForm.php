@@ -113,8 +113,8 @@ class PackagingSettingsForm extends ConfigFormBase {
       '#suffix' => '</div>',
     );
 
-    if (!empty($form_state['values']['packaging_strategy'])) {
-      $strategy = $form_state['values']['packaging_strategy'];
+    if (!empty($form_state->getValue('packaging_strategy'))) {
+      $strategy = $form_state->getValue('packaging_strategy');
     }
     else {
       $strategy = $packaging_config->get('strategy', reset($options));
@@ -211,7 +211,7 @@ class PackagingSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state['values'];
+    $values = $form_state->getValues();
 
     $packaging_config = $this->config('packaging.settings');
 
@@ -226,7 +226,7 @@ class PackagingSettingsForm extends ConfigFormBase {
       ->save();
 
     // Print message for testing purposes - won't do this in release version.
-    $operation = $form_state['values']['packaging_strategy'];
+    $operation = $values['packaging_strategy'];
     if ($instance = packaging_get_instance($operation)) {
       $context = new Context();
       $context->setStrategy($instance);

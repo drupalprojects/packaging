@@ -102,7 +102,7 @@ class PackagingDebugForm extends ConfigFormBase {
    * development, and will be removed before a release.
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $values = $form_state['values'];
+    $values = $form_state->getValues();
 
     $packaging_config = $this->config('packaging.settings');
 
