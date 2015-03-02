@@ -9,7 +9,6 @@ namespace Drupal\packaging\Plugin\Type;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Language\LanguageManager;
 use Drupal\Core\Plugin\DefaultPluginManager;
 use Drupal\Core\StringTranslation\TranslationInterface;
 
@@ -26,14 +25,12 @@ class StrategyManager extends DefaultPluginManager {
    *   implementations.
    * @param \Drupal\Core\Cache\CacheBackendInterface $cache_backend
    *   Cache backend instance to use.
-   * @param \Drupal\Core\Language\LanguageManager $language_manager
-   *   The language manager.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler to invoke the alter hook with.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, LanguageManager $language_manager, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Strategy', $namespaces, '\Drupal\packaging\Annotation\Strategy');
-    $this->alterInfo($module_handler, 'strategy_info');
-    $this->setCacheBackend($cache_backend, $language_manager, 'strategy_plugin');
+  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
+    parent::__construct('Plugin/Strategy', $namespaces, $module_handler, 'Drupal\packaging\Strategy', 'Drupal\packaging\Annotation\Strategy');
+    $this->alterInfo('strategy_info');
+    $this->setCacheBackend($cache_backend, 'strategy_plugin');
   }
 }
