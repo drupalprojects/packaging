@@ -33,19 +33,14 @@ use Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy;
 
 
 /**
- * SimpleTests for Packaging.
+ * Tests packaging strategy plugins.
+ *
+ * @group Packaging
  */
 class PackagingUnitTest extends KernelTestBase {
 
   protected $products = array();
 
-  public static function getInfo() {
-    return array(
-      'name' => 'Packaging',
-      'description' => 'Test Packaging.',
-      'group' => 'Packaging',
-    );
-  }
 
   /**
    * Don't check for or validate config schema.
