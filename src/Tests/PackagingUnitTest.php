@@ -28,9 +28,6 @@ use Drupal\packaging\Plugin\Strategy\PackageOnePackage;
 
 use Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy;
 
-// For now, we're still dependent upon a few module funtions.
-\Drupal::ModuleHandler()->load('packaging');
-
 
 /**
  * Tests packaging strategy plugins.
@@ -39,15 +36,20 @@ use Drupal\packaging_test\Plugin\Strategy\PackageCustomStrategy;
  */
 class PackagingUnitTest extends KernelTestBase {
 
-  protected $products = array();
-
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('packaging');
 
   /**
-   * Don't check for or validate config schema.
+   * Array of Product objects for use by the packaging tests.
    *
-   * @var bool
+   * @var array
    */
-  protected $strictConfigSchema = FALSE;
+  protected $products = array();
+
 
   /**
    * Overrides KernelTestBase::setUp().
