@@ -57,6 +57,9 @@ class PackagingSettingsForm extends ConfigFormBase {
     return 'packaging_admin_settings';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getEditableConfigNames() {
     return [
       'packaging.settings',

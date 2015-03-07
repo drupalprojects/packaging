@@ -35,6 +35,9 @@ class PackagingDebugForm extends ConfigFormBase {
     return 'packaging_debug';
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function getEditableConfigNames() {
     return [
       'packaging.settings',
