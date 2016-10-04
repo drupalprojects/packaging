@@ -172,7 +172,7 @@ class PackagingProduct {
    * Mutator for pkg_qty property.
    */
   public function setPackageQuantity($pkg_qty) {
-    $this->quantity = $pkg_qty;
+    $this->pkg_qty = $pkg_qty;
     return $this;
   }
 
