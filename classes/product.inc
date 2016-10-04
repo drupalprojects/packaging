@@ -40,6 +40,28 @@ class PackagingProduct {
 
     $construct = new PackagingProduct();
 
+    // Copy properties into this instance.
+    $construct->quantity     = $product->quantity;
+    $construct->pkg_qty      = $product->pkg_qty;
+
+    $construct->price        = $product->price;
+    $construct->weight       = $product->weight;
+    $construct->weight_units = $product->weight_units;
+
+    $construct->length       = $product->length;
+    $construct->width        = $product->width;
+    $construct->height       = $product->height;
+    $construct->volume       = $product->volume;
+    $construct->length_units = $product->length_units;
+
+    // Copy any designated properties from the Commerce product type to the
+    // PackagingProduct type.
+    foreach (PackagingContext::getKeys() as $key) {
+      if (property_exists($product, $key)) {
+        $construct->$key = $product->$key;
+      }
+    }
+//   dprint_r($construct);
     return $construct;
   }
 
@@ -240,7 +262,7 @@ class PackagingProduct {
    * want to alter the volume you should use setDimensions() instead.
    */
   public function setVolume($volume) {
-    return $this->volume = $volume;
+    $this->volume = $volume;
     return $this;
   }
 
